@@ -1,0 +1,43 @@
+// file for dbdiagram.io
+Table company {
+  id int [pk, not null]
+  name char(30) [not null]
+  logo image
+}
+
+Table user {
+  id int [pk, not null]
+  company int [ref :> company.id, not null]
+  username char(40) [not null]
+  password char(100) [not null]
+  role int [not null]
+  // role will be represented by enum so no need to add table for that entity
+  temporary_password bool [not null] // optional if feature with password set in app will be provided
+}
+
+Table product {
+  id int [pk, not null]
+  company int [ref :> company.id, not null]
+  price decimal [not null]
+  name char(20) [not null]
+  description char(150)
+}
+
+Table order {
+  id int [pk, not null]
+  company int [ref :> company.id, not null]
+  client int [ref :> user.id, not null]
+  name char(20)
+  send_on datetime [not null]
+  placed_on datetime [not null]
+  delivered_on datetime
+  expected_delivery datetime
+  delivery_man int [ref :> user.id]
+  total_price decimal [not null]
+}
+
+Table order_product {
+  order int [ref:> order.id, primary key]
+  product int [ref:> product.id, primary key]
+  quantity int [not null]
+}
