@@ -1,3 +1,88 @@
+GET {{host}}/order/1
+Accept: application/json
+
+###
+GET {{host}}/product/1
+Accept: application/json
+
+###
+POST {{host}}/product
+Content-Type: application/json
+
+{
+  "name": "Product 1",
+  "price": "19.99",
+  "description": "This is a sample product",
+  "companyId": 1
+}
+
+###
+POST {{host}}/order
+Content-Type: application/json
+
+{
+  "companyId": 1,
+  "products": [
+    {
+      "productId": 1,
+      "quantity": 2
+    },
+    {
+      "productId": 2,
+      "quantity": 1
+    }
+  ],
+  "clientId": 1,
+  "name": "Order 1",
+  "placedOn": "2022-03-01T12:00:00",
+  "totalPrice": "39.99"
+}
+
+###
+POST {{host}}/user
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe",
+  "password": "password123",
+  "role": "ADMIN",
+  "companyId": 1
+}
+
+###
+GET {{host}}/user/1
+Accept: application/json
+
+###
+GET {{host}}/company/5
+Accept: application/json
+
+###
+POST {{host}}/company
+Content-Type: application/json
+
+{
+  "name": "FFF"
+}
+
+###
+
+
+
+
+
+###
+
+
+###
+GET {{host}}/user/1
+Accept: application/json
+
+
+
+###
 GET {{host}}/
 Accept: application/json
 

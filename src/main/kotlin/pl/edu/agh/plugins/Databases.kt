@@ -7,45 +7,24 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.sql.*
 import kotlinx.coroutines.*
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.transactions.transaction
+import pl.edu.agh.dao.*
 
 fun Application.configureDatabases() {
-    val dbConnection: Connection = connectToPostgres(embedded = true)
-    val cityService = CityService(dbConnection)
+    val url = environment.config.property("ktor.database.url").getString()
+    val user = environment.config.property("ktor.database.user").getString()
+    val password = environment.config.property("ktor.database.password").getString()
+    val driver = environment.config.property("ktor.database.driver").getString()
 
-    routing {
+    Database.connect(url, driver, user, password)
 
-        // Create city
-        post("/cities") {
-            val city = call.receive<City>()
-            val id = cityService.create(city)
-            call.respond(HttpStatusCode.Created, id)
-        }
-
-        // Read city
-        get("/cities/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            try {
-                val city = cityService.read(id)
-                call.respond(HttpStatusCode.OK, city)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
-            }
-        }
-
-        // Update city
-        put("/cities/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val user = call.receive<City>()
-            cityService.update(id, user)
-            call.respond(HttpStatusCode.OK)
-        }
-
-        // Delete city
-        delete("/cities/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            cityService.delete(id)
-            call.respond(HttpStatusCode.OK)
-        }
+    transaction {
+        addLogger(StdOutSqlLogger)
+        SchemaUtils.create(ProductTable, CompanyTable, CompanyLogoTable, OrderTable, OrderProductTable, UserTable)
     }
 }
 
@@ -75,9 +54,9 @@ fun Application.connectToPostgres(embedded: Boolean): Connection {
     if (embedded) {
         return DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "root", "")
     } else {
-        val url = environment.config.property("postgres.url").getString()
-        val user = environment.config.property("postgres.user").getString()
-        val password = environment.config.property("postgres.password").getString()
+        val url = environment.config.property("ktor.database.url").getString()
+        val user = environment.config.property("ktor.database.user").getString()
+        val password = environment.config.property("ktor.database.password").getString()
 
         return DriverManager.getConnection(url, user, password)
     }
