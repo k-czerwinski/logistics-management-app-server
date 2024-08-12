@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.charLength
 import pl.edu.agh.model.UserRole
 
 object UserTable: IntIdTable() {
@@ -14,6 +15,10 @@ object UserTable: IntIdTable() {
     val company = reference("company", CompanyTable, fkName = "FK_User_Company_Id")
     val role = enumeration("role", UserRole::class)
     val temporaryPassword = bool("temporary_password")
+    init {
+        check("password_min_length") { password.charLength() greaterEq 8 }
+        uniqueIndex("unique_username_company", username, company)
+    }
 }
 
 class UserDAO(id: EntityID<Int>) : IntEntity(id) {

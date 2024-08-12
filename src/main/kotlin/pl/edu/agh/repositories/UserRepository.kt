@@ -1,12 +1,17 @@
 package pl.edu.agh.repositories
 
+import org.jetbrains.exposed.sql.and
 import pl.edu.agh.dao.CompanyDAO
 import pl.edu.agh.dao.UserDAO
+import pl.edu.agh.dao.UserTable
 import pl.edu.agh.model.User
 import pl.edu.agh.model.UserCreateDTO
 import pl.edu.agh.model.toUser
 
 class UserRepository() : Repository<User, UserCreateDTO> {
+    suspend fun getByUsername(username: String, companyId: Int): User? = suspendTransaction {
+        UserDAO.find { (UserTable.username eq username) and (UserTable.company eq companyId) }.firstOrNull()?.let(::toUser)
+    }
     override suspend fun getAll(): List<User> = suspendTransaction {
         UserDAO.all().map(::toUser)
     }

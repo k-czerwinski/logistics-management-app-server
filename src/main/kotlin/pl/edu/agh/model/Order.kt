@@ -29,7 +29,6 @@ data class OrderCreateDTO(
     val products: List<OrderProductCreateDTO>,
     val clientId: Int,
     val name: String?,
-    val placedOn: LocalDateTime,
     val sendOn: LocalDateTime? = null,
     val deliveredOn: LocalDateTime? = null,
     val expectedDeliveryOn: LocalDateTime? = null,

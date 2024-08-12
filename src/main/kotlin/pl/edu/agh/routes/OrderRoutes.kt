@@ -9,13 +9,13 @@ import pl.edu.agh.model.OrderCreateDTO
 import pl.edu.agh.repositories.OrderRepository
 
 fun Route.orderRoutes(orderRepository: OrderRepository) {
-    get("/order/{id}") {
-        val id : Int? = call.parameters["id"]?.toInt()
-        if (id == null) {
+    get("/order/{orderId}") {
+        val orderId: Int? = call.parameters["orderId"]?.toInt()
+        if (orderId == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@get
         } else {
-            val user = orderRepository.getById(id)
+            val user = orderRepository.getById(orderId)
             if (user == null) {
                 call.respond(HttpStatusCode.NotFound)
                 return@get

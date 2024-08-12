@@ -1,11 +1,13 @@
 package pl.edu.agh.repositories
 
+import kotlinx.datetime.toKotlinLocalDateTime
 import pl.edu.agh.dao.*
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderCreateDTO
 import pl.edu.agh.model.toOrder
+import java.time.LocalDateTime
 
-class OrderRepository : Repository<Order, OrderCreateDTO>{
+class OrderRepository : Repository<Order, OrderCreateDTO> {
     override suspend fun getAll(): List<Order> = suspendTransaction {
         OrderDAO.all().map(::toOrder)
     }
@@ -14,11 +16,11 @@ class OrderRepository : Repository<Order, OrderCreateDTO>{
         OrderDAO.findById(id)?.let(::toOrder)
     }
 
-//    it also adds all the products to the order_products table
-    override suspend fun add(item: OrderCreateDTO) : Unit = suspendTransaction {
+    //    it also adds all the products to the order_products table
+    override suspend fun add(item: OrderCreateDTO): Unit = suspendTransaction {
         val orderDAO = OrderDAO.new {
             client = UserDAO[item.clientId]
-            placedOn = item.placedOn
+            placedOn = LocalDateTime.now().toKotlinLocalDateTime()
             companyDAO = CompanyDAO[item.companyId]
             totalPrice = item.totalPrice
             name = item.name
