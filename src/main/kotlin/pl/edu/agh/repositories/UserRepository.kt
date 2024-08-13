@@ -23,7 +23,7 @@ class UserRepository() : Repository<User, UserCreateDTO> {
     override suspend fun add(item: UserCreateDTO): Unit = suspendTransaction {
         UserDAO.new {
             username = item.username
-            password = item.password
+            password = item.hashedPassword()
             firstName = item.firstName
             lastName = item.lastName
             companyDAO = CompanyDAO[item.companyId]

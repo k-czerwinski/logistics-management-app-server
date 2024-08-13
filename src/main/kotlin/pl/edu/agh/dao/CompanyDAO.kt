@@ -7,11 +7,11 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object CompanyTable: IntIdTable() {
     val name = varchar("name", 30)
-    val logo = reference("logo", CompanyLogoTable, fkName = "FK_Company_Logo_Id").nullable()
+    val logo = reference("logo_id", CompanyLogoTable, fkName = "FK_Company_Logo_Id").nullable()
 }
 
-object CompanyLogoTable: IntIdTable("logo") {
-    val image = binary("logo")
+object CompanyLogoTable: IntIdTable("company_logo") {
+    val image = binary("image")
 }
 
 class CompanyDAO(id: EntityID<Int>) : IntEntity(id) {

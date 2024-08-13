@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
+import org.mindrot.jbcrypt.BCrypt
 import pl.edu.agh.plugins.JwtProperties
 import pl.edu.agh.plugins.generateToken
 import pl.edu.agh.repositories.UserRepository
@@ -20,7 +21,7 @@ fun Route.authorizationRoutes(userRepository: UserRepository, jwtProperties: Jwt
         val loginRequest = call.receive<LoginDTO>()
         val user = userRepository.getByUsername(loginRequest.username, loginRequest.companyId)
 
-        if (user != null && user.password == loginRequest.password) {
+        if (user != null && BCrypt.checkpw(loginRequest.password, user.password)) {
             val token = generateToken(jwtProperties, user.username, user.role, user.company)
             call.respond(HttpStatusCode.OK, TokenDTO(token))
         } else {

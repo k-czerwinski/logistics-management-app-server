@@ -33,7 +33,7 @@ fun Application.configureSecurity(jwtProperties: JwtProperties) {
 
 val PathParamAuthorizationPlugin = createRouteScopedPlugin(
     name = "CompanyIdPathParamAuthorizationPlugin",
-    createConfiguration = ::PluginConfiguration
+    createConfiguration = ::PathParameterAuthorizationPluginConfiguration
 ) {
     pluginConfig.apply {
         on(AuthenticationChecked) { call ->
@@ -51,9 +51,32 @@ val PathParamAuthorizationPlugin = createRouteScopedPlugin(
     }
 }
 
-class PluginConfiguration {
+class PathParameterAuthorizationPluginConfiguration {
     lateinit var pathParameterName: String
     lateinit var jwtPrincipalClaimName: String
+}
+
+val UserRoleAuthorizationPlugin = createRouteScopedPlugin(
+    name = "UserRoleAuthorizationPlugin",
+    createConfiguration = ::UserRoleAuthorizationPluginConfiguration
+) {
+    pluginConfig.apply {
+        on(AuthenticationChecked) { call ->
+            val principal = call.principal<JWTPrincipal>()
+            val roleFromToken: UserRole? = principal?.payload?.getClaim("role")?.asString()?.let { UserRole.valueOf(it) }
+            if (roleFromToken == null) {
+                call.respond(HttpStatusCode.Unauthorized)
+                return@on
+            }
+            if (roleFromToken != requiredRole) {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
+    }
+}
+
+class UserRoleAuthorizationPluginConfiguration {
+    lateinit var requiredRole: UserRole
 }
 
 fun generateToken(jwtProperties: JwtProperties, username: String, role: UserRole, company: Company): String {
