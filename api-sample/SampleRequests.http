@@ -3,37 +3,25 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "username": "usernamee",
+  "username": "username",
   "password": "password",
   "companyId": {{companyId}}
 }
 
 > {% client.global.set("accessToken", response.body.accessToken); %}
 
-### Get order by id
-GET {{host}}/company/{{companyId}}/order/{{orderId}}
+### CLIENT - Get order by id
+GET {{host}}/company/{{companyId}}/client/{{clientId}}/order/{{orderId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-### Get product by id
-GET {{host}}/company/{{companyId}}/product/{{productId}}
+### CLIENT - Get product by id
+GET {{host}}/company/{{companyId}}/client/product/{{productId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-### Add a new product
-POST {{host}}/company/{{companyId}}/product
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-  "name": "Product 1",
-  "price": "19.99",
-  "description": "This is a sample product",
-  "companyId": 1
-}
-
-### Add a new order
-POST {{host}}/company/{{companyId}}/order
+### CLIENT - Add a new order
+POST {{host}}/company/{{companyId}}/client/{{clientId}}/order
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -49,13 +37,46 @@ Authorization: Bearer {{accessToken}}
       "quantity": 1
     }
   ],
-  "clientId": 1,
+  "clientId": 2,
   "name": "Order 1",
   "totalPrice": "39.99"
 }
 
-### Add a new user
-POST {{host}}/company/1/user
+### CLIENT - Get company by id
+GET {{host}}/company/{{companyId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### CLIENT - Get current user
+GET {{host}}/company/{{companyId}}/client
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### ADMIN - Get order by id
+GET {{host}}/company/{{companyId}}/admin/order/{{orderId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### ADMIN - Get product by id
+GET {{host}}/company/{{companyId}}/admin/product/{{productId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### ADMIN - Add a new product
+POST {{host}}/company/{{companyId}}/admin/product
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "Product 1",
+  "price": "19.99",
+  "description": "This is a sample product",
+  "companyId": 1
+}
+
+### ADMIN - Add a new user
+POST {{host}}/company/{{companyId}}/admin/user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -64,26 +85,22 @@ Authorization: Bearer {{accessToken}}
   "lastName": "Doe",
   "username": "abcd",
   "password": "password123",
-  "role": "ADMIN",
+  "role": "CLIENT",
   "companyId": {{companyId}}
 }
 
-### Get user by id
-GET {{host}}/company/{{companyId}}/user/{{userId}}
+### ADMIN - Get current user
+GET {{host}}/company/{{companyId}}/admin
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-### Get company by id
+### ADMIN - Get user by id
+GET {{host}}/company/{{companyId}}/admin/user/1
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### ADMIN - Get company by id
 GET {{host}}/company/{{companyId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
-
-### Add a new company
-POST {{host}}/company
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-  "name": "TEST"
-}
 

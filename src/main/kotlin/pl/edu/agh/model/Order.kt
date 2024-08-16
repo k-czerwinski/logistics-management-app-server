@@ -9,7 +9,7 @@ import java.math.BigDecimal
 @Serializable
 data class Order(
     val id: Int,
-    val company: Company,
+    val companyId: Int,
 //    TODO add serializer for Map
     val products: Map<Product, Int>,
     val client: User,
@@ -45,7 +45,7 @@ data class OrderProductCreateDTO(
 
 fun toOrder(dao: OrderDAO) = Order(
     id = dao.id.value,
-    company = toCompany(dao.companyDAO),
+    companyId = dao.companyDAO.id.value,
     products = dao.products.mapKeys { toProduct(it.key) },
     client = toUser(dao.client),
     name = dao.name,

@@ -2,13 +2,15 @@ package pl.edu.agh.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.Claim
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
-import pl.edu.agh.model.Company
+import io.ktor.util.*
 import pl.edu.agh.model.UserRole
+import pl.edu.agh.routes.PathParamParseException
 
 data class JwtProperties(val audience: String, val domain: String, val realm: String, val secret: String)
 
@@ -37,9 +39,8 @@ val PathParamAuthorizationPlugin = createRouteScopedPlugin(
 ) {
     pluginConfig.apply {
         on(AuthenticationChecked) { call ->
-            val companyIdPathParameter: Int? = call.parameters["companyId"]?.toInt()
-            val principal = call.principal<JWTPrincipal>()
-            val companyIdFromToken: Int? = principal?.payload?.getClaim("company")?.asInt()
+            val companyIdPathParameter: Int? = call.parameters[pathParameterName]?.toInt()
+            val companyIdFromToken: Int? = getClaimFromToken(call, jwtPrincipalClaimName).asInt()
             if (companyIdPathParameter == null || companyIdFromToken == null) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@on
@@ -57,34 +58,37 @@ class PathParameterAuthorizationPluginConfiguration {
 }
 
 val UserRoleAuthorizationPlugin = createRouteScopedPlugin(
-    name = "UserRoleAuthorizationPlugin",
-    createConfiguration = ::UserRoleAuthorizationPluginConfiguration
+    name = "UserRoleAuthorizationPlugin"
 ) {
     pluginConfig.apply {
         on(AuthenticationChecked) { call ->
-            val principal = call.principal<JWTPrincipal>()
-            val roleFromToken: UserRole? = principal?.payload?.getClaim("role")?.asString()?.let { UserRole.valueOf(it) }
-            if (roleFromToken == null) {
+            val roleFromToken: UserRole? = getClaimFromToken(call, "role").asString()?.let { UserRole.valueOf(it) }
+            val roleInPath: UserRole =
+                call.parameters["userRole"]?.let { UserRole.valueOf(it.toUpperCasePreservingASCIIRules()) }
+                    ?: throw PathParamParseException("Parameter userRole is missing or is not a valid role")
+
+            if (roleFromToken == null || roleInPath != roleFromToken) {
                 call.respond(HttpStatusCode.Unauthorized)
                 return@on
-            }
-            if (roleFromToken != requiredRole) {
-                call.respond(HttpStatusCode.Unauthorized)
             }
         }
     }
 }
 
-class UserRoleAuthorizationPluginConfiguration {
-    lateinit var requiredRole: UserRole
+class JwtWithoutRequiredClaimException(claimName: String) : IllegalAccessException("No claim $claimName in token")
+
+fun getClaimFromToken(call: ApplicationCall, claimName: String): Claim {
+    val principal = call.principal<JWTPrincipal>()
+    return principal?.payload?.getClaim(claimName)
+        ?: throw JwtWithoutRequiredClaimException("No claim $claimName in token")
 }
 
-fun generateToken(jwtProperties: JwtProperties, username: String, role: UserRole, company: Company): String {
+fun generateToken(jwtProperties: JwtProperties, userId: Int, role: UserRole, companyId: Int): String {
     return JWT.create()
         .withAudience(jwtProperties.audience)
         .withIssuer(jwtProperties.domain)
         .withClaim("role", role.name)
-        .withClaim("username", username)
-        .withClaim("company", company.id)
+        .withClaim("user", userId)
+        .withClaim("company", companyId)
         .sign(Algorithm.HMAC256(jwtProperties.secret))
 }

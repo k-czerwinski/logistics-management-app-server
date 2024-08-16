@@ -11,8 +11,9 @@ class CompanyRepository : Repository<Company, CompanyCreateDTO> {
         CompanyDAO.all().map(::toCompany)
     }
 
-    override suspend fun getById(id: Int): Company? = suspendTransaction {
-        CompanyDAO.findById(id)?.let(::toCompany)
+    override suspend fun getById(entityId: Int, companyId: Int): Company? = suspendTransaction {
+        require(companyId == entityId) { IllegalArgumentException("Company id must be equal to entity id") }
+        CompanyDAO.findById(entityId)?.let(::toCompany)
     }
 
 //    if logo is not null then it is added to the database automatically with company

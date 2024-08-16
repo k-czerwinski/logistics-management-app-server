@@ -8,16 +8,18 @@ import pl.edu.agh.model.User
 import pl.edu.agh.model.UserCreateDTO
 import pl.edu.agh.model.toUser
 
-class UserRepository() : Repository<User, UserCreateDTO> {
+class UserRepository : Repository<User, UserCreateDTO> {
     suspend fun getByUsername(username: String, companyId: Int): User? = suspendTransaction {
-        UserDAO.find { (UserTable.username eq username) and (UserTable.company eq companyId) }.firstOrNull()?.let(::toUser)
+        UserDAO.find { (UserTable.username eq username) and (UserTable.company eq companyId) }.firstOrNull()
+            ?.let(::toUser)
     }
+
     override suspend fun getAll(): List<User> = suspendTransaction {
         UserDAO.all().map(::toUser)
     }
 
-    override suspend fun getById(id: Int): User? = suspendTransaction {
-        UserDAO.findById(id)?.let(::toUser)
+    override suspend fun getById(entityId: Int, companyId: Int): User? = suspendTransaction {
+        UserDAO.find { (UserTable.id eq entityId) and (UserTable.company eq companyId) }.firstOrNull()?.let(::toUser)
     }
 
     override suspend fun add(item: UserCreateDTO): Unit = suspendTransaction {
@@ -29,7 +31,7 @@ class UserRepository() : Repository<User, UserCreateDTO> {
             companyDAO = CompanyDAO[item.companyId]
             role = item.role
             temporaryPassword = false
-         }
+        }
     }
 
     override suspend fun update(item: User): User {

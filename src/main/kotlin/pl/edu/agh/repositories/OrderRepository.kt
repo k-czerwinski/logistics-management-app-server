@@ -1,6 +1,7 @@
 package pl.edu.agh.repositories
 
 import kotlinx.datetime.toKotlinLocalDateTime
+import org.jetbrains.exposed.sql.and
 import pl.edu.agh.dao.*
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderCreateDTO
@@ -12,8 +13,9 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
         OrderDAO.all().map(::toOrder)
     }
 
-    override suspend fun getById(id: Int): Order? = suspendTransaction {
-        OrderDAO.findById(id)?.let(::toOrder)
+    override suspend fun getById(entityId: Int, companyId: Int): Order? = suspendTransaction {
+        OrderDAO.find { (OrderTable.id eq entityId) and (OrderTable.company eq companyId) }.firstOrNull()
+            ?.let(::toOrder)
     }
 
     //    it also adds all the products to the order_products table

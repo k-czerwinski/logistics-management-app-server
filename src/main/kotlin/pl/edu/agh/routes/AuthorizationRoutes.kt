@@ -22,7 +22,7 @@ fun Route.authorizationRoutes(userRepository: UserRepository, jwtProperties: Jwt
         val user = userRepository.getByUsername(loginRequest.username, loginRequest.companyId)
 
         if (user != null && BCrypt.checkpw(loginRequest.password, user.password)) {
-            val token = generateToken(jwtProperties, user.username, user.role, user.company)
+            val token = generateToken(jwtProperties, user.id, user.role, user.companyId)
             call.respond(HttpStatusCode.OK, TokenDTO(token))
         } else {
             call.respond(HttpStatusCode.Unauthorized)

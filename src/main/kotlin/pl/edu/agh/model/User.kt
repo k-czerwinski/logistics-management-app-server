@@ -1,6 +1,7 @@
 package pl.edu.agh.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.mindrot.jbcrypt.BCrypt
 import pl.edu.agh.dao.UserDAO
 
@@ -10,10 +11,11 @@ data class User(
     val firstName: String,
     val lastName: String,
     val username: String,
-    val password: String,
+    @Transient
+    val password: String = "",
     val role: UserRole,
     val temporaryPassword: Boolean,
-    val company: Company
+    val companyId: Int
 )
 
 @Serializable
@@ -25,7 +27,7 @@ data class UserCreateDTO(
     val role: UserRole,
     val companyId: Int
 ) {
-    fun hashedPassword() = BCrypt.hashpw(password, BCrypt.gensalt())
+    fun hashedPassword() : String = BCrypt.hashpw(password, BCrypt.gensalt())
 }
 
 fun toUser(dao: UserDAO) = User(
@@ -36,5 +38,5 @@ fun toUser(dao: UserDAO) = User(
     password = dao.password,
     role = dao.role,
     temporaryPassword = dao.temporaryPassword,
-    company = toCompany(dao.companyDAO)
+    companyId = dao.companyDAO.id.value
 )

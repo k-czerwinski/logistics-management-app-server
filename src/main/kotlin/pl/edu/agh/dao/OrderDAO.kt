@@ -56,8 +56,9 @@ class OrderProductDAO(id: EntityID<Int>) : IntEntity(id) {
     var quantity by OrderProductTable.quantity
 }
 
+// TODO: remove this function?
 fun toOrderDAO(model: Order) = OrderDAO.new {
-    companyDAO = CompanyDAO[model.company.id]
+    companyDAO = CompanyDAO[model.companyId]
     client = UserDAO[model.client.id]
     name = model.name
     sendOn = model.sendOn

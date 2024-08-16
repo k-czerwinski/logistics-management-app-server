@@ -11,8 +11,8 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
  */
 interface Repository<T, U> {
     suspend fun getAll(): List<T>
-    suspend fun getById(id: Int): T?
-    suspend fun add(item: U): Unit
+    suspend fun getById(entityId: Int, companyId: Int): T?
+    suspend fun add(item: U)
     suspend fun update(item: T): T
     suspend fun delete(id: Int): Boolean
 }
