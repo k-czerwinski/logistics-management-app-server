@@ -6,6 +6,7 @@ build/
 
 ### DEVELOPMENT FILES ###
 **/application-dev.conf
+/ssl/keystore/**
 
 ### STS ###
 .apt_generated
