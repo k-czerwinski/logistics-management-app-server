@@ -14,7 +14,7 @@ data class Product(
     val price: BigDecimal,
     val description: String?,
     @Transient
-    val company: Company = Company(-1, "placeholder_value_for_serialization", null)
+    val company: Company = Company(-1, "placeholder_value_for_serialization", "placeholder_value_for_serialization", null)
 )
 
 @Serializable

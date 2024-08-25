@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object CompanyTable: IntIdTable() {
     val name = varchar("name", 30)
+    val domain = varchar("domain", 30).uniqueIndex("CONSTRAINT_UNIQUE_COMPANY_DOMAIN")
     val logo = reference("logo_id", CompanyLogoTable, fkName = "FK_Company_Logo_Id").nullable()
 }
 
@@ -18,10 +19,9 @@ class CompanyDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CompanyDAO>(CompanyTable)
 
     var name by CompanyTable.name
+    var domain by CompanyTable.domain
     var logo by CompanyLogoDAO optionalReferencedOn CompanyTable.logo
-//    val users by User referrersOn UserTable.company
-//    val products by Product referrersOn ProductTable.company
-//    val orders by Order referrersOn OrderTable.company
+
 }
 
 class CompanyLogoDAO(id: EntityID<Int>) : IntEntity(id) {

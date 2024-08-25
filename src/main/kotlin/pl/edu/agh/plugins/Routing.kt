@@ -29,12 +29,12 @@ fun Application.configureRouting(
             when (cause) {
 //                HTTP 404 is returned not to reveal user and token information
                 is JwtWithoutRequiredClaimException -> call.respond(HttpStatusCode.NotFound)
-                is PermissionDeniedException -> call.respond(HttpStatusCode.NotFound)
+                is PermissionDeniedException -> call.respond(HttpStatusCode.Unauthorized)
             }
         }
     }
     routing {
-        authorizationRoutes(userRepository, jwtProperties)
+        authorizationRoutes(userRepository, companyRepository, jwtProperties)
         authenticate {
             route("/company/{companyId}") {
                 install(PathParamAuthorizationPlugin) {

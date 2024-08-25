@@ -7,6 +7,7 @@ import pl.edu.agh.dao.CompanyDAO
 data class Company(
     val id: Int,
     val name: String,
+    val domain: String,
     val logo: CompanyLogo?
 )
 
@@ -19,5 +20,6 @@ data class CompanyCreateDTO(
 fun toCompany(dao: CompanyDAO) = Company(
     id = dao.id.value,
     name = dao.name,
+    domain = dao.domain,
     logo = dao.logo?.let { toCompanyLogo(it) }
 )
