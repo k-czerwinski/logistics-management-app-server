@@ -3,15 +3,20 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "username": "username",
-  "password": "password",
-  "companyId": {{companyId}}
+  "companyDomain": "c1",
+  "username": "a",
+  "password": "p"
 }
 
 > {% client.global.set("accessToken", response.body.accessToken); %}
 
 ### CLIENT - Get order by id
 GET {{host}}/company/{{companyId}}/client/{{clientId}}/order/{{orderId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### CLIENT - Get orders
+GET {{host}}/company/{{companyId}}/client/{{clientId}}/orders
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -29,15 +34,15 @@ Authorization: Bearer {{accessToken}}
   "companyId": 1,
   "products": [
     {
-      "productId": 1,
+      "productId": 3,
       "quantity": 2
     },
     {
-      "productId": 2,
+      "productId": 4,
       "quantity": 1
     }
   ],
-  "clientId": 2,
+  "clientId": 1,
   "name": "Order 1",
   "totalPrice": "39.99"
 }

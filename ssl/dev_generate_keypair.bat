@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-@REM  ensure that certificate is saved in save directory
+@REM  ensure that certificate is saved in safe directory
 set "KEYSTORE=./keystore/keystore.jks"
 set "ALIAS=localhostKey"
 set "KEYALG=EC"

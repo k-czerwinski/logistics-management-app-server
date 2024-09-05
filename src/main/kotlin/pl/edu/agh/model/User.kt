@@ -14,7 +14,8 @@ data class User(
     @Transient
     val password: String = "",
     val role: UserRole,
-    val temporaryPassword: Boolean,
+    @Transient
+    val temporaryPassword: Boolean = false,
     val companyId: Int
 )
 
