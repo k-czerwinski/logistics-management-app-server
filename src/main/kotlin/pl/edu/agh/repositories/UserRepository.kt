@@ -14,16 +14,16 @@ class UserRepository : Repository<User, UserCreateDTO> {
             ?.let(::toUser)
     }
 
-    override suspend fun getAll(): List<User> = suspendTransaction {
-        UserDAO.all().map(::toUser)
+    override suspend fun getAll(companyId: Int): List<User> = suspendTransaction {
+        UserDAO.find{ UserTable.company eq companyId}.map(::toUser)
     }
 
     override suspend fun getById(entityId: Int, companyId: Int): User? = suspendTransaction {
         UserDAO.find { (UserTable.id eq entityId) and (UserTable.company eq companyId) }.firstOrNull()?.let(::toUser)
     }
 
-    override suspend fun add(item: UserCreateDTO): Unit = suspendTransaction {
-        UserDAO.new {
+    override suspend fun add(item: UserCreateDTO): User = suspendTransaction {
+        val userDAO = UserDAO.new {
             username = item.username
             password = item.hashedPassword()
             firstName = item.firstName
@@ -32,6 +32,7 @@ class UserRepository : Repository<User, UserCreateDTO> {
             role = item.role
             temporaryPassword = false
         }
+        toUser(userDAO)
     }
 
     override suspend fun update(item: User): User {

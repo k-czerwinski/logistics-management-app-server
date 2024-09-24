@@ -14,6 +14,12 @@ fun Route.commonRoutes(
 ) {
     route(Regex("/(?<userRole>(client|admin))")) {
         install(UserRoleAuthorizationPlugin)
+        get("/products") {
+            val companyId: Int = getIntPathParam(call, "companyId")
+            val products = productRepository.getAll(companyId)
+            call.respond(products)
+        }
+
         get("/product/{productId}") {
             val productId: Int = getIntPathParam(call, "productId")
             val companyId: Int = getIntPathParam(call, "companyId")

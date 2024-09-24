@@ -8,6 +8,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderCreateDTO
+import pl.edu.agh.model.OrderCreateResponseDTO
 import pl.edu.agh.plugins.PathParamAuthorizationPlugin
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.repositories.OrderRepository
@@ -20,16 +21,17 @@ fun Route.clientRoutes(orderRepository: OrderRepository) {
             jwtPrincipalClaimName = "user"
         }
         post("/order") {
-            val order = call.receive<OrderCreateDTO>()
-            validateWithPathParam(call, order.clientId, "clientId")
-            validateWithPathParam(call, order.companyId, "companyId")
+            val orderCreateDTO = call.receive<OrderCreateDTO>()
+            validateWithPathParam(call, orderCreateDTO.clientId, "clientId")
+            validateWithPathParam(call, orderCreateDTO.companyId, "companyId")
             try {
-                orderRepository.add(order)
+                val order = orderRepository.add(orderCreateDTO)
+                call.respond(HttpStatusCode.Created, OrderCreateResponseDTO(order.totalPrice))
+                return@post
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Company with id ${order.companyId} does not exist")
+                call.respond(HttpStatusCode.BadRequest, "Company with id ${orderCreateDTO.companyId} does not exist")
                 return@post
             }
-            call.respond(HttpStatusCode.Created)
         }
 
         get("/orders") {

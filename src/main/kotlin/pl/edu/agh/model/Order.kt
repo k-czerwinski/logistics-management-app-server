@@ -66,18 +66,18 @@ data class OrderCreateDTO(
     val products: List<OrderProductCreateDTO>,
     val clientId: Int,
     val name: String?,
-    val sendOn: LocalDateTime? = null,
-    val deliveredOn: LocalDateTime? = null,
-    val expectedDeliveryOn: LocalDateTime? = null,
-    val courierId: Int? = null,
-    @Serializable(with = BigDecimalSerializer::class)
-    val totalPrice: BigDecimal
 )
 
 @Serializable
 data class OrderProductCreateDTO(
     val productId: Int,
     val quantity: Int
+)
+
+@Serializable
+data class OrderCreateResponseDTO(
+    @Serializable(with = BigDecimalSerializer::class)
+    val totalPrice: BigDecimal
 )
 
 fun toOrder(dao: OrderDAO) = Order(

@@ -9,8 +9,8 @@ import pl.edu.agh.model.toOrder
 import java.time.LocalDateTime
 
 class OrderRepository : Repository<Order, OrderCreateDTO> {
-    override suspend fun getAll(): List<Order> = suspendTransaction {
-        OrderDAO.all().map(::toOrder)
+    override suspend fun getAll(companyId: Int): List<Order> = suspendTransaction {
+        OrderDAO.find{ OrderTable.company eq companyId }.map(::toOrder)
     }
 
     suspend fun getAllByClientId(clientId: Int, companyId: Int): List<Order> = suspendTransaction {
@@ -24,25 +24,33 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
     }
 
     //    it also adds all the products to the order_products table
-    override suspend fun add(item: OrderCreateDTO): Unit = suspendTransaction {
-        val orderDAO = OrderDAO.new {
-            client = UserDAO[item.clientId]
-            placedOn = LocalDateTime.now().toKotlinLocalDateTime()
-            companyDAO = CompanyDAO[item.companyId]
-            totalPrice = item.totalPrice
-            name = item.name
-            sendOn = item.sendOn
-            deliveredOn = item.deliveredOn
-            expectedDeliveryOn = item.expectedDeliveryOn
-            courier = item.courierId?.let { UserDAO[it] }
+    override suspend fun add(orderCreateDTO: OrderCreateDTO): Order = suspendTransaction {
+        val productDAOs = orderCreateDTO.products.map {
+            ProductDAO[it.productId] to it.quantity
         }
-        item.products.forEach {
+        val totalProductsPrice = productDAOs.map { (product, quantity) ->
+            product.price * quantity.toBigDecimal()
+        }.reduce { acc, bigDecimal -> acc + bigDecimal }
+
+        val orderDAO = OrderDAO.new {
+            client = UserDAO[orderCreateDTO.clientId]
+            placedOn = LocalDateTime.now().toKotlinLocalDateTime()
+            companyDAO = CompanyDAO[orderCreateDTO.companyId]
+            totalPrice = totalProductsPrice
+            name = orderCreateDTO.name
+            sendOn = null
+            deliveredOn = null
+            expectedDeliveryOn = null
+            courier = null
+        }
+        productDAOs.forEach {
             OrderProductDAO.new {
-                productDAO = ProductDAO[it.productId]
-                quantity = it.quantity
+                productDAO = it.first
+                quantity = it.second
                 this.orderDAO = orderDAO
             }
         }
+        toOrder(orderDAO)
     }
 
     override suspend fun delete(id: Int): Boolean {

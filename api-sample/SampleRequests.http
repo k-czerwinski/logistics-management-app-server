@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "companyId": 1,
+  "companyId": {{companyId}},
   "products": [
     {
       "productId": 3,
@@ -42,9 +42,8 @@ Authorization: Bearer {{accessToken}}
       "quantity": 1
     }
   ],
-  "clientId": 1,
-  "name": "Order 1",
-  "totalPrice": "39.99"
+  "clientId": {{clientId}},
+  "name": "Order 1"
 }
 
 ### CLIENT - Get company by id

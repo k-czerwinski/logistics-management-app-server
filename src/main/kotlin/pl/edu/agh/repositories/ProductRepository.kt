@@ -9,20 +9,23 @@ import pl.edu.agh.model.ProductCreateDTO
 import pl.edu.agh.model.toProduct
 
 class ProductRepository : Repository<Product, ProductCreateDTO> {
-    override suspend fun getAll(): List<Product> = suspendTransaction { ProductDAO.all().map(::toProduct) }
+    override suspend fun getAll(companyId: Int): List<Product> = suspendTransaction {
+        ProductDAO.find { ProductTable.company eq companyId }.map(::toProduct)
+    }
 
     override suspend fun getById(entityId: Int, companyId: Int): Product? = suspendTransaction {
         ProductDAO.find { (ProductTable.id eq entityId) and (ProductTable.company eq companyId) }.firstOrNull()
             ?.let(::toProduct)
     }
 
-    override suspend fun add(item: ProductCreateDTO): Unit = suspendTransaction {
-        ProductDAO.new {
+    override suspend fun add(item: ProductCreateDTO): Product = suspendTransaction {
+        val productDAO = ProductDAO.new {
             name = item.name
             description = item.description
             price = item.price
             companyDAO = CompanyDAO[item.companyId]
         }
+        toProduct(productDAO)
     }
 
     override suspend fun update(item: Product): Product {
