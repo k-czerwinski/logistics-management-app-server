@@ -16,7 +16,7 @@ import pl.edu.agh.repositories.OrderRepository
 fun Route.clientRoutes(orderRepository: OrderRepository) {
     route(Regex("/(?<userRole>client)/(?<clientId>\\d+)")) {
         install(UserRoleAuthorizationPlugin)
-        install(PathParamAuthorizationPlugin) {
+        install(PathParamAuthorizationPlugin("clientIdPathValidationPlugin")) {
             pathParameterName = "clientId"
             jwtPrincipalClaimName = "user"
         }

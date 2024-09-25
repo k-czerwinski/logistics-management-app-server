@@ -8,18 +8,16 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import pl.edu.agh.repositories.CompanyRepository
-import pl.edu.agh.repositories.OrderRepository
-import pl.edu.agh.repositories.ProductRepository
-import pl.edu.agh.repositories.UserRepository
+import pl.edu.agh.repositories.*
 import pl.edu.agh.routes.*
 
 fun Application.configureRouting(
-    jwtProperties: JwtProperties,
+    jwtTokenBuilder: JwtTokenBuilder,
     userRepository: UserRepository,
     companyRepository: CompanyRepository,
     productRepository: ProductRepository,
-    orderRepository: OrderRepository
+    orderRepository: OrderRepository,
+    refreshTokenRepository: RefreshTokenRepository
 ) {
     install(ContentNegotiation) {
         json()
@@ -34,10 +32,10 @@ fun Application.configureRouting(
         }
     }
     routing {
-        authorizationRoutes(userRepository, companyRepository, jwtProperties)
+        authorizationRoutes(userRepository, companyRepository, refreshTokenRepository, jwtTokenBuilder)
         authenticate {
             route("/company/{companyId}") {
-                install(PathParamAuthorizationPlugin) {
+                install(PathParamAuthorizationPlugin("companyIdPathValidationPlugin")) {
                     pathParameterName = "companyId"
                     jwtPrincipalClaimName = "company"
                 }

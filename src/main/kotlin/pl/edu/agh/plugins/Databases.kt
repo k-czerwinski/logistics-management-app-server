@@ -1,12 +1,6 @@
 package pl.edu.agh.plugins
 
-import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import java.sql.*
-import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -24,6 +18,6 @@ fun Application.configureDatabases() {
 
     transaction {
         addLogger(StdOutSqlLogger)
-        SchemaUtils.create(CompanyTable, ProductTable, CompanyLogoTable, OrderProductTable, OrderTable, UserTable)
+        SchemaUtils.create(CompanyTable, ProductTable, CompanyLogoTable, OrderProductTable, OrderTable, UserTable, RefreshTokenTable)
     }
 }
