@@ -23,7 +23,7 @@ class RefreshTokenRepository {
         }
     }
 
-    suspend fun delete(userId: Int) = suspendTransaction{
-        RefreshTokenDAO.findById(userId)?.delete()
+    suspend fun delete(refreshToken: String) = suspendTransaction{
+        RefreshTokenDAO.find { RefreshTokenTable.token eq refreshToken }.firstOrNull()?.delete()
     }
 }
