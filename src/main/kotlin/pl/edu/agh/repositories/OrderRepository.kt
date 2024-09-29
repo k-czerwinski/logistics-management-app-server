@@ -18,6 +18,11 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
             .map(::toOrder)
     }
 
+    suspend fun getAllByCourierId(courierId: Int, companyId: Int): List<Order> = suspendTransaction {
+        OrderDAO.find { (OrderTable.courier eq courierId) and (OrderTable.company eq companyId) }
+            .map(::toOrder)
+    }
+
     override suspend fun getById(entityId: Int, companyId: Int): Order? = suspendTransaction {
         OrderDAO.find { (OrderTable.id eq entityId) and (OrderTable.company eq companyId) }.firstOrNull()
             ?.let(::toOrder)

@@ -55,7 +55,7 @@ fun Route.authorizationRoutes(
 
             call.respond(
                 HttpStatusCode.OK,
-                LoginResponse(accessToken, refreshToken.first, user.id, user.companyId, user.role)
+                LoginResponse(accessToken, refreshToken.first, user.companyId, user.id, user.role)
             )
         } else {
             call.respond(HttpStatusCode.Unauthorized)
@@ -68,12 +68,12 @@ fun Route.authorizationRoutes(
         call.respond(HttpStatusCode.NoContent)
     }
 
-    route(Regex("/company/(?<companyId>\\d+)/(?<userRole>(client|admin))/(?<clientId>\\d+)")) {
+    route(Regex("/company/(?<companyId>\\d+)/(?<userRole>(client|admin|courier))/(?<userId>\\d+)")) {
         post("/refresh-token") {
             val refreshToken = call.receive<RefreshTokenRequest>().refreshToken
             val refreshTokenEntry: RefreshToken = refreshTokenRepository.getByToken(refreshToken)
                 ?: throw PermissionDeniedException("Invalid refresh token")
-            if (refreshTokenEntry.user.id != getIntPathParam(call, "clientId")
+            if (refreshTokenEntry.user.id != getIntPathParam(call, "userId")
                 || refreshTokenEntry.user.companyId != getIntPathParam(call, "companyId")
             ) {
                 throw PermissionDeniedException("Invalid refresh token")

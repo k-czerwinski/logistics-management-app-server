@@ -74,6 +74,17 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 
+### COURIER - Get order by id
+GET {{host}}/company/{{companyId}}/courier/{{courierId}}/order/{{orderId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### COURIER - Get orders
+GET {{host}}/company/{{companyId}}/courier/{{courierId}}/orders
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
 ### ADMIN - Get order by id
 GET {{host}}/company/{{companyId}}/admin/order/{{orderId}}
 Accept: application/json

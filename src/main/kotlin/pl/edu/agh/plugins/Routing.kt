@@ -40,6 +40,7 @@ fun Application.configureRouting(
                     jwtPrincipalClaimName = "company"
                 }
                 clientRoutes(orderRepository)
+                courierRoutes(orderRepository)
                 adminRoutes(productRepository, userRepository, orderRepository)
                 commonRoutes(productRepository, userRepository)
                 get {
