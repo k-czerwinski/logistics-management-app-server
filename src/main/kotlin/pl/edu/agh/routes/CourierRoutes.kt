@@ -28,13 +28,28 @@ fun Route.courierRoutes(orderRepository: OrderRepository) {
         get("/order/{orderId}") {
             val orderId: Int = getIntPathParam(call, "orderId")
             val companyId: Int = getIntPathParam(call, "companyId")
+            val courierId: Int = getIntPathParam(call, "courierId")
             val order = getEntityById(orderId, companyId, orderRepository::getById)
-            if (order.courier == null || order.courier.id != getIntPathParam(call, "courierId")) {
+            if (order.courier == null || order.courier.id != courierId) {
                 throw NotFoundException(
-                    "Order with id $orderId does not exist or is not assigned to the courier with id ${getIntPathParam(call, "courierId")}"
+                    "Order with id $orderId does not exist or is not assigned to the courier with id $courierId"
                 )
             }
             call.respond(HttpStatusCode.OK, order)
+        }
+
+        put("/order/{orderId}/delivered") {
+            val companyId: Int = getIntPathParam(call, "companyId")
+            val orderId: Int = getIntPathParam(call, "orderId")
+            val courierId: Int = getIntPathParam(call, "courierId")
+            try {
+                orderRepository.deliverOrder(companyId, orderId, courierId)
+                call.respond(HttpStatusCode.NoContent)
+            } catch (e: Exception) {
+                throw NotFoundException(
+                    "Order with id $orderId does not exist, is already delivered or is not assigned to the courier with id $courierId"
+                )
+            }
         }
     }
 }

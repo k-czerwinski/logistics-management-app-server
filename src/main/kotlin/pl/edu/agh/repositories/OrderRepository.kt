@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 class OrderRepository : Repository<Order, OrderCreateDTO> {
     override suspend fun getAll(companyId: Int): List<Order> = suspendTransaction {
-        OrderDAO.find{ OrderTable.company eq companyId }.map(::toOrder)
+        OrderDAO.find { OrderTable.company eq companyId }.map(::toOrder)
     }
 
     suspend fun getAllByClientId(clientId: Int, companyId: Int): List<Order> = suspendTransaction {
@@ -56,6 +56,14 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
             }
         }
         toOrder(orderDAO)
+    }
+
+    suspend fun deliverOrder(companyId: Int, orderId: Int, courierId: Int) = suspendTransaction {
+        OrderDAO.find { (OrderTable.id eq orderId) and (OrderTable.company eq companyId) and (OrderTable.courier eq courierId) and (OrderTable.deliveredOn eq null) }
+            .firstOrNull()?.let {
+                it.deliveredOn = LocalDateTime.now().toKotlinLocalDateTime()
+            }
+            ?: throw IllegalArgumentException("Order with id $orderId does not exist or is not assigned to the courier with id $courierId")
     }
 
     override suspend fun delete(id: Int): Boolean {
