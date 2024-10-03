@@ -80,6 +80,11 @@ data class OrderCreateResponseDTO(
     val totalPrice: BigDecimal
 )
 
+@Serializable
+data class OrderExpectedDeliveryDTO(
+    val expectedDelivery: LocalDateTime
+)
+
 fun toOrder(dao: OrderDAO) = Order(
     id = dao.id.value,
     companyId = dao.companyDAO.id.value,

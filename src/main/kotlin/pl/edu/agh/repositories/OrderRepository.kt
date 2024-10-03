@@ -66,6 +66,14 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
             ?: throw IllegalArgumentException("Order with id $orderId does not exist or is not assigned to the courier with id $courierId")
     }
 
+    suspend fun setExpectedDelivery(companyId: Int, orderId: Int, courierId: Int, expectedDelivery: LocalDateTime) = suspendTransaction {
+        OrderDAO.find { (OrderTable.id eq orderId) and (OrderTable.company eq companyId) and (OrderTable.courier eq courierId) and (OrderTable.deliveredOn eq null) }
+            .firstOrNull()?.let {
+                it.expectedDeliveryOn = expectedDelivery.toKotlinLocalDateTime()
+            }
+            ?: throw IllegalArgumentException("Order with id $orderId does not exist or is not assigned to the courier with id $courierId")
+    }
+
     override suspend fun delete(id: Int): Boolean {
         TODO("Not yet implemented")
     }
