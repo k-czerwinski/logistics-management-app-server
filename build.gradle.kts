@@ -4,6 +4,7 @@ val postgres_version: String by project
 val h2_version: String by project
 val exposed_version: String by project
 val jbcrypt_version: String by project
+val ktor_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.0"
@@ -33,6 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-status-pages")
     implementation("org.postgresql:postgresql:$postgres_version")
+    implementation("io.ktor:ktor-server-call-logging:$ktor_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")

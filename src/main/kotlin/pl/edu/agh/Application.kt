@@ -2,6 +2,7 @@ package pl.edu.agh
 
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.callloging.*
 import pl.edu.agh.plugins.*
 import pl.edu.agh.repositories.*
 
@@ -23,6 +24,7 @@ fun Application.module() {
     val companyRepository = CompanyRepository()
     val refreshTokenRepository = RefreshTokenRepository()
     val jwtTokenBuilder = JwtTokenBuilder(jwtProperties)
+    install(CallLogging)
     configureDatabases()
     configureSecurity(jwtProperties)
     configureRouting(jwtTokenBuilder, userRepository, companyRepository, productRepository, orderRepository, refreshTokenRepository)

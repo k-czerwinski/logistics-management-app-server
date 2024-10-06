@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.serialization.Serializable
 import org.mindrot.jbcrypt.BCrypt
 import pl.edu.agh.model.Company
@@ -14,6 +15,7 @@ import pl.edu.agh.plugins.JwtTokenBuilder
 import pl.edu.agh.repositories.CompanyRepository
 import pl.edu.agh.repositories.RefreshTokenRepository
 import pl.edu.agh.repositories.UserRepository
+import java.time.ZoneOffset
 
 @Serializable
 data class LoginRequest(val username: String, val password: String, val companyDomain: String)
@@ -73,6 +75,10 @@ fun Route.authorizationRoutes(
             val refreshToken = call.receive<RefreshTokenRequest>().refreshToken
             val refreshTokenEntry: RefreshToken = refreshTokenRepository.getByToken(refreshToken)
                 ?: throw PermissionDeniedException("Invalid refresh token")
+
+            if (java.time.LocalDateTime.now(ZoneOffset.UTC).isAfter(refreshTokenEntry.expiryDate.toJavaLocalDateTime())) {
+                throw PermissionDeniedException("Refresh token expired")
+            }
             if (refreshTokenEntry.user.id != getIntPathParam(call, "userId")
                 || refreshTokenEntry.user.companyId != getIntPathParam(call, "companyId")
             ) {

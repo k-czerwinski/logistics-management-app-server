@@ -14,7 +14,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import pl.edu.agh.model.UserRole
 import pl.edu.agh.routes.PathParamParseException
-import java.util.*
+import java.time.ZoneOffset
 
 data class JwtProperties(
     val audience: String,
@@ -96,20 +96,18 @@ fun getClaimFromToken(call: ApplicationCall, claimName: String): Claim {
 
 class JwtTokenBuilder(private val jwtProperties: JwtProperties) {
     fun accessToken(userId: Int, role: UserRole, companyId: Int): String {
+        val expiryDate = java.time.LocalDateTime.now(ZoneOffset.UTC).plusSeconds(jwtProperties.accessTokenExpiresIn.toLong() / 1000L)
         return generateToken(jwtProperties, userId, role, companyId)
-            .withExpiresAt(Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiresIn))
+            .withExpiresAt(expiryDate.toInstant(ZoneOffset.UTC))
             .sign(Algorithm.HMAC256(jwtProperties.secret))
     }
 
     fun refreshToken(userId: Int, role: UserRole, companyId: Int): Pair<String, LocalDateTime> {
-        val expiryDate = Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiresIn)
+        val expiryDate = java.time.LocalDateTime.now(ZoneOffset.UTC).plusSeconds(jwtProperties.refreshTokenExpiresIn.toLong() / 1000L)
         val refreshToken = generateToken(jwtProperties, userId, role, companyId)
-            .withExpiresAt(expiryDate)
+            .withExpiresAt(expiryDate.toInstant(ZoneOffset.UTC))
             .sign(Algorithm.HMAC256(jwtProperties.secret))
-        return refreshToken to java.time.LocalDateTime.ofInstant(
-            expiryDate.toInstant(),
-            TimeZone.getDefault().toZoneId()
-        ).toKotlinLocalDateTime()
+        return refreshToken to expiryDate.toKotlinLocalDateTime()
     }
 
     private fun generateToken(
