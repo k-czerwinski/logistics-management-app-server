@@ -14,7 +14,6 @@ object UserTable: IntIdTable() {
     val lastName = varchar("last_name", 40)
     val company = reference("company", CompanyTable, fkName = "FK_User_Company_Id")
     val role = enumeration("role", UserRole::class)
-    val temporaryPassword = bool("temporary_password")
     init {
         check("password_min_length") { password.charLength() greaterEq 8 }
         uniqueIndex("unique_username_company", username, company)
@@ -30,7 +29,5 @@ class UserDAO(id: EntityID<Int>) : IntEntity(id) {
     var lastName by UserTable.lastName
     var companyDAO by CompanyDAO referencedOn UserTable.company
     var role by UserTable.role
-    var temporaryPassword by UserTable.temporaryPassword
-//    val client by Order referrersOn OrderTable.client
-//    val courier by Order optionalReferrersOn OrderTable.courier
+
 }

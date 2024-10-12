@@ -14,8 +14,6 @@ data class User(
     @Transient
     val password: String = "",
     val role: UserRole,
-    @Transient
-    val temporaryPassword: Boolean = false,
     val companyId: Int
 )
 
@@ -38,6 +36,5 @@ fun toUser(dao: UserDAO) = User(
     username = dao.username,
     password = dao.password,
     role = dao.role,
-    temporaryPassword = dao.temporaryPassword,
     companyId = dao.companyDAO.id.value
 )

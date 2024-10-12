@@ -5,8 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import pl.edu.agh.model.ProductCreateDTO
-import pl.edu.agh.model.UserCreateDTO
+import pl.edu.agh.model.*
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.repositories.OrderRepository
 import pl.edu.agh.repositories.ProductRepository
@@ -17,7 +16,7 @@ fun Route.adminRoutes(
     userRepository: UserRepository,
     orderRepository: OrderRepository
 ) {
-    route(Regex("/(?<userRole>admin)")) {
+    route(Regex("/(?<userRole>admin)/(?<adminId>\\d+)")) {
         install(UserRoleAuthorizationPlugin)
         post("/product") {
             val product = call.receive<ProductCreateDTO>()
@@ -29,6 +28,19 @@ fun Route.adminRoutes(
                 return@post
             }
             call.respond(HttpStatusCode.Created)
+        }
+
+        get("/users") {
+            val companyId = getIntPathParam(call, "companyId")
+            val userRole: UserRole? = call.request.queryParameters["userRole"]?.let(UserRole::valueOfNullable)
+            if (userRole != null) {
+                call.respond(userRepository.getByRole(companyId, userRole))
+                return@get
+            } else {
+                call.respond(userRepository.getAll(companyId))
+                return@get
+            }
+
         }
 
         post("/user") {
@@ -49,11 +61,25 @@ fun Route.adminRoutes(
             call.respond(HttpStatusCode.Created)
         }
 
+        get("/orders") {
+            val companyId: Int = getIntPathParam(call, "companyId")
+            val orders = orderRepository.getAll(companyId).map(Order::toOrderListView).toList()
+            call.respond(HttpStatusCode.OK, orders)
+        }
+
         get("/order/{orderId}") {
             val orderId: Int = getIntPathParam(call, "orderId")
             val companyId: Int = getIntPathParam(call, "companyId")
             val order = getEntityById(orderId, companyId, orderRepository::getById)
             call.respond(order)
+        }
+
+        put("/order/{orderId}/send") {
+            val companyId: Int = getIntPathParam(call, "companyId")
+            val orderId: Int = getIntPathParam(call, "orderId")
+            val courierId : Int = getIntQueryParam(call, "courierId")
+            orderRepository.sendOrder(companyId, orderId, courierId)
+            call.respond(HttpStatusCode.NoContent)
         }
     }
 }

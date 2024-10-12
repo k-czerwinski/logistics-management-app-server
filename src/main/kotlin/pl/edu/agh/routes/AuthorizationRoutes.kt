@@ -70,37 +70,30 @@ fun Route.authorizationRoutes(
         call.respond(HttpStatusCode.NoContent)
     }
 
-    route(Regex("/company/(?<companyId>\\d+)/(?<userRole>(client|admin|courier))/(?<userId>\\d+)")) {
-        post("/refresh-token") {
-            val refreshToken = call.receive<RefreshTokenRequest>().refreshToken
-            val refreshTokenEntry: RefreshToken = refreshTokenRepository.getByToken(refreshToken)
-                ?: throw PermissionDeniedException("Invalid refresh token")
+    post("/refresh-token") {
+        val refreshToken = call.receive<RefreshTokenRequest>().refreshToken
+        val refreshTokenEntry: RefreshToken = refreshTokenRepository.getByToken(refreshToken)
+            ?: throw PermissionDeniedException("Invalid refresh token")
 
-            if (java.time.LocalDateTime.now(ZoneOffset.UTC).isAfter(refreshTokenEntry.expiryDate.toJavaLocalDateTime())) {
-                throw PermissionDeniedException("Refresh token expired")
-            }
-            if (refreshTokenEntry.user.id != getIntPathParam(call, "userId")
-                || refreshTokenEntry.user.companyId != getIntPathParam(call, "companyId")
-            ) {
-                throw PermissionDeniedException("Invalid refresh token")
-            }
-
-            val accessToken = jwtTokenBuilder.accessToken(
-                refreshTokenEntry.user.id,
-                refreshTokenEntry.user.role,
-                refreshTokenEntry.user.companyId
-            )
-            val newRefreshToken = jwtTokenBuilder.refreshToken(
-                refreshTokenEntry.user.id,
-                refreshTokenEntry.user.role,
-                refreshTokenEntry.user.companyId
-            )
-            refreshTokenRepository.addOrReplace(
-                newRefreshToken.first,
-                refreshTokenEntry.user.id,
-                newRefreshToken.second
-            )
-            call.respond(HttpStatusCode.OK, RefreshTokenResponse(accessToken, newRefreshToken.first))
+        if (java.time.LocalDateTime.now(ZoneOffset.UTC).isAfter(refreshTokenEntry.expiryDate.toJavaLocalDateTime())) {
+            throw PermissionDeniedException("Refresh token expired")
         }
+
+        val accessToken = jwtTokenBuilder.accessToken(
+            refreshTokenEntry.user.id,
+            refreshTokenEntry.user.role,
+            refreshTokenEntry.user.companyId
+        )
+        val newRefreshToken = jwtTokenBuilder.refreshToken(
+            refreshTokenEntry.user.id,
+            refreshTokenEntry.user.role,
+            refreshTokenEntry.user.companyId
+        )
+        refreshTokenRepository.addOrReplace(
+            newRefreshToken.first,
+            refreshTokenEntry.user.id,
+            newRefreshToken.second
+        )
+        call.respond(HttpStatusCode.OK, RefreshTokenResponse(accessToken, newRefreshToken.first))
     }
 }

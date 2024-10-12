@@ -5,12 +5,15 @@ import io.ktor.server.plugins.*
 import pl.edu.agh.model.User
 import pl.edu.agh.plugins.getClaimFromToken
 import pl.edu.agh.repositories.UserRepository
-
+class QueryParamParseException(message: String) : BadRequestException(message)
 class PathParamParseException(message: String) : BadRequestException(message)
 class PermissionDeniedException(message: String) : IllegalAccessException(message)
 
 fun getIntPathParam(call: ApplicationCall, paramName: String): Int = call.parameters[paramName]?.toInt()
     ?: throw PathParamParseException("Parameter $paramName is missing or is not an integer")
+
+fun getIntQueryParam(call: ApplicationCall, paramName: String): Int = call.request.queryParameters[paramName]?.toInt()
+    ?: throw QueryParamParseException("Query parameter $paramName is missing or it is not an integer")
 
 fun validateWithPathParam(call: ApplicationCall, requiredValue: Int, pathParamName: String) {
     val pathParamValue = getIntPathParam(call, pathParamName)

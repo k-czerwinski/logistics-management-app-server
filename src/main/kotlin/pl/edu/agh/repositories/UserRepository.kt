@@ -6,6 +6,7 @@ import pl.edu.agh.dao.UserDAO
 import pl.edu.agh.dao.UserTable
 import pl.edu.agh.model.User
 import pl.edu.agh.model.UserCreateDTO
+import pl.edu.agh.model.UserRole
 import pl.edu.agh.model.toUser
 
 class UserRepository : Repository<User, UserCreateDTO> {
@@ -22,6 +23,10 @@ class UserRepository : Repository<User, UserCreateDTO> {
         UserDAO.find { (UserTable.id eq entityId) and (UserTable.company eq companyId) }.firstOrNull()?.let(::toUser)
     }
 
+    suspend fun getByRole(companyId: Int, userRole: UserRole) : List<User> = suspendTransaction {
+        UserDAO.find{ (UserTable.company eq companyId) and (UserTable.role eq userRole) }.map(::toUser)
+    }
+
     override suspend fun add(item: UserCreateDTO): User = suspendTransaction {
         val userDAO = UserDAO.new {
             username = item.username
@@ -30,7 +35,6 @@ class UserRepository : Repository<User, UserCreateDTO> {
             lastName = item.lastName
             companyDAO = CompanyDAO[item.companyId]
             role = item.role
-            temporaryPassword = false
         }
         toUser(userDAO)
     }

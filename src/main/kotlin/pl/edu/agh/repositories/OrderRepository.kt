@@ -1,11 +1,10 @@
 package pl.edu.agh.repositories
 
+import io.ktor.server.plugins.*
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.and
 import pl.edu.agh.dao.*
-import pl.edu.agh.model.Order
-import pl.edu.agh.model.OrderCreateDTO
-import pl.edu.agh.model.toOrder
+import pl.edu.agh.model.*
 import java.time.LocalDateTime
 
 class OrderRepository : Repository<Order, OrderCreateDTO> {
@@ -72,6 +71,16 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
                 it.expectedDeliveryOn = expectedDelivery.toKotlinLocalDateTime()
             }
             ?: throw IllegalArgumentException("Order with id $orderId does not exist or is not assigned to the courier with id $courierId")
+    }
+
+    suspend fun sendOrder(companyId: Int, orderId: Int, courierId: Int) = suspendTransaction {
+        val courier: UserDAO = UserDAO.find { (UserTable.id eq courierId) and (UserTable.role eq UserRole.COURIER) }
+            .firstOrNull() ?: throw NotFoundException()
+        OrderDAO.find { (OrderTable.id eq orderId) and (OrderTable.company eq companyId) and (OrderTable.sendOn eq null)}
+            .firstOrNull()?.let {
+                it.courier = courier
+                it.sendOn = LocalDateTime.now().toKotlinLocalDateTime()
+            } ?: throw NotFoundException("Order with id $orderId cannot be send because it does not exist or has illegal state")
     }
 
     override suspend fun delete(id: Int): Boolean {

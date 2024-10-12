@@ -3,8 +3,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "companyDomain": "c1",
-  "username": "a",
+  "companyDomain": "c2",
+  "username": "c",
   "password": "p"
 }
 
@@ -86,17 +86,17 @@ Authorization: Bearer {{accessToken}}
 
 
 ### ADMIN - Get order by id
-GET {{host}}/company/{{companyId}}/admin/order/{{orderId}}
+GET {{host}}/company/{{companyId}}/admin/{{adminId}}/order/{{orderId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### ADMIN - Get product by id
-GET {{host}}/company/{{companyId}}/admin/product/{{productId}}
+GET {{host}}/company/{{companyId}}/admin/{{adminId}}/product/{{productId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### ADMIN - Add a new product
-POST {{host}}/company/{{companyId}}/admin/product
+POST {{host}}/company/{{companyId}}/admin/{{adminId}}/product
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -108,7 +108,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### ADMIN - Add a new user
-POST {{host}}/company/{{companyId}}/admin/user
+POST {{host}}/company/{{companyId}}/admin/{{adminId}}/user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -127,12 +127,17 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### ADMIN - Get user by id
-GET {{host}}/company/{{companyId}}/admin/user/1
+GET {{host}}/company/{{companyId}}/admin/{{adminId}}/user/{{courierId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### ADMIN - Get company by id
 GET {{host}}/company/{{companyId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### ADMIN - Send order
+PUT {{host}}/company/{{companyId}}/admin/{{adminId}}/order/18/send?courierId=4
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
