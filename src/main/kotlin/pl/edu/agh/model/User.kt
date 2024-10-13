@@ -29,6 +29,25 @@ data class UserCreateDTO(
     fun hashedPassword() : String = BCrypt.hashpw(password, BCrypt.gensalt())
 }
 
+@Serializable
+data class UserListViewItemDTO(
+    val id: Int,
+    val firstName: String,
+    val lastName: String,
+    val role: UserRole,
+) {
+    companion object {
+        fun toDTO(user: User) : UserListViewItemDTO {
+            return UserListViewItemDTO(
+                id = user.id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                role = user.role
+            )
+        }
+    }
+}
+
 fun toUser(dao: UserDAO) = User(
     id = dao.id.value,
     firstName = dao.firstName,

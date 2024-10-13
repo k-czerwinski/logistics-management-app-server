@@ -32,15 +32,13 @@ fun Route.adminRoutes(
 
         get("/users") {
             val companyId = getIntPathParam(call, "companyId")
-            val userRole: UserRole? = call.request.queryParameters["userRole"]?.let(UserRole::valueOfNullable)
-            if (userRole != null) {
-                call.respond(userRepository.getByRole(companyId, userRole))
-                return@get
+            val userRole: UserRole? = call.request.queryParameters["role"]?.let(UserRole::valueOfNullable)
+            val userList = if (userRole != null) {
+                userRepository.getByRole(companyId, userRole)
             } else {
-                call.respond(userRepository.getAll(companyId))
-                return@get
+                userRepository.getAll(companyId)
             }
-
+            call.respond(userList.map(UserListViewItemDTO::toDTO).toList())
         }
 
         post("/user") {

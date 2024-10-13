@@ -107,6 +107,10 @@ Authorization: Bearer {{accessToken}}
   "companyId": 1
 }
 
+### ADMIN - Get users
+GET {{host}}/company/{{companyId}}/admin/{{adminId}}/users?role=courier
+Authorization: Bearer {{accessToken}}
+
 ### ADMIN - Add a new user
 POST {{host}}/company/{{companyId}}/admin/{{adminId}}/user
 Content-Type: application/json
