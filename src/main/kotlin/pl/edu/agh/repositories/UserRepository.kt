@@ -27,13 +27,13 @@ class UserRepository : Repository<User, UserCreateDTO> {
         UserDAO.find{ (UserTable.company eq companyId) and (UserTable.role eq userRole) }.map(::toUser)
     }
 
-    override suspend fun add(item: UserCreateDTO): User = suspendTransaction {
+    override suspend fun add(item: UserCreateDTO, companyId: Int): User = suspendTransaction {
         val userDAO = UserDAO.new {
             username = item.username
             password = item.hashedPassword()
             firstName = item.firstName
             lastName = item.lastName
-            companyDAO = CompanyDAO[item.companyId]
+            companyDAO = CompanyDAO[companyId]
             role = item.role
         }
         toUser(userDAO)

@@ -23,13 +23,13 @@ fun Route.clientRoutes(orderRepository: OrderRepository) {
         post("/order") {
             val orderCreateDTO = call.receive<OrderCreateDTO>()
             validateWithPathParam(call, orderCreateDTO.clientId, "clientId")
-            validateWithPathParam(call, orderCreateDTO.companyId, "companyId")
+            val companyId = getIntPathParam(call, "companyId")
             try {
-                val order = orderRepository.add(orderCreateDTO)
+                val order = orderRepository.add(orderCreateDTO, companyId)
                 call.respond(HttpStatusCode.Created, OrderCreateResponseDTO(order.totalPrice))
                 return@post
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Company with id ${orderCreateDTO.companyId} does not exist")
+                call.respond(HttpStatusCode.BadRequest, "Company with id $companyId does not exist")
                 return@post
             }
         }

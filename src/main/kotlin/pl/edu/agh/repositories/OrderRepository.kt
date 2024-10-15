@@ -28,7 +28,7 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
     }
 
     //    it also adds all the products to the order_products table
-    override suspend fun add(orderCreateDTO: OrderCreateDTO): Order = suspendTransaction {
+    override suspend fun add(orderCreateDTO: OrderCreateDTO, companyId: Int): Order = suspendTransaction {
         val productDAOs = orderCreateDTO.products.map {
             ProductDAO[it.productId] to it.quantity
         }
@@ -39,7 +39,7 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
         val orderDAO = OrderDAO.new {
             client = UserDAO[orderCreateDTO.clientId]
             placedOn = LocalDateTime.now().toKotlinLocalDateTime()
-            companyDAO = CompanyDAO[orderCreateDTO.companyId]
+            companyDAO = CompanyDAO[companyId]
             totalPrice = totalProductsPrice
             name = orderCreateDTO.name
             sendOn = null

@@ -23,8 +23,7 @@ data class UserCreateDTO(
     val lastName: String,
     val username: String,
     val password: String,
-    val role: UserRole,
-    val companyId: Int
+    val role: UserRole
 ) {
     fun hashedPassword() : String = BCrypt.hashpw(password, BCrypt.gensalt())
 }

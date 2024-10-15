@@ -20,9 +20,9 @@ fun Route.adminRoutes(
         install(UserRoleAuthorizationPlugin)
         post("/product") {
             val product = call.receive<ProductCreateDTO>()
-            validateWithPathParam(call, product.companyId, "companyId")
+            val companyId = getIntPathParam(call, "companyId")
             try {
-                productRepository.add(product)
+                productRepository.add(product, companyId)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
@@ -41,21 +41,30 @@ fun Route.adminRoutes(
             call.respond(userList.map(UserListViewItemDTO::toDTO).toList())
         }
 
+        get("/user/{userId}") {
+            val companyId: Int = getIntPathParam(call, "companyId")
+            val userId: Int = getIntPathParam(call, "userId")
+            val user = getEntityById(userId, companyId, userRepository::getById)
+            call.respond(user)
+        }
+
         post("/user") {
             val user = call.receive<UserCreateDTO>()
-            validateWithPathParam(call, user.companyId, "companyId")
-            userRepository.getByUsername(user.username, user.companyId)?.let {
+            val companyId = getIntPathParam(call,"companyId")
+            userRepository.getByUsername(user.username, companyId)?.let {
                 if (it.username == user.username) {
                     call.respond(HttpStatusCode.Conflict, "User with username ${user.username} already exists")
                     return@post
                 }
             }
+            var createdUser: User?
             try {
-                userRepository.add(user)
+                createdUser = userRepository.add(user, companyId)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity)
                 return@post
             }
+            call.response.header(HttpHeaders.Location, call.request.path() + "/${createdUser.id}")
             call.respond(HttpStatusCode.Created)
         }
 

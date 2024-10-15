@@ -62,7 +62,6 @@ data class OrderListView(
 )
 @Serializable
 data class OrderCreateDTO(
-    val companyId: Int,
     val products: List<OrderProductCreateDTO>,
     val clientId: Int,
     val name: String?,

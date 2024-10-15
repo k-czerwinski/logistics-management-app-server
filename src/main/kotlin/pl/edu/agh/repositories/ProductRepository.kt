@@ -18,12 +18,12 @@ class ProductRepository : Repository<Product, ProductCreateDTO> {
             ?.let(::toProduct)
     }
 
-    override suspend fun add(item: ProductCreateDTO): Product = suspendTransaction {
+    override suspend fun add(item: ProductCreateDTO, companyId: Int): Product = suspendTransaction {
         val productDAO = ProductDAO.new {
             name = item.name
             description = item.description
             price = item.price
-            companyDAO = CompanyDAO[item.companyId]
+            companyDAO = CompanyDAO[companyId]
         }
         toProduct(productDAO)
     }

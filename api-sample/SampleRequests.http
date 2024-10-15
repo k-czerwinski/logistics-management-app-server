@@ -48,7 +48,6 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "companyId": {{companyId}},
   "products": [
     {
       "productId": 3,
@@ -103,14 +102,13 @@ Authorization: Bearer {{accessToken}}
 {
   "name": "Product 1",
   "price": "19.99",
-  "description": "This is a sample product",
-  "companyId": 1
+  "description": "This is a sample product"
 }
 
 ### ADMIN - Get users
 GET {{host}}/company/{{companyId}}/admin/{{adminId}}/users?role=courier
 Authorization: Bearer {{accessToken}}
-
+\
 ### ADMIN - Add a new user
 POST {{host}}/company/{{companyId}}/admin/{{adminId}}/user
 Content-Type: application/json
@@ -119,10 +117,9 @@ Authorization: Bearer {{accessToken}}
 {
   "firstName": "John",
   "lastName": "Doe",
-  "username": "abcd",
+  "username": "abcdfghi",
   "password": "password123",
-  "role": "CLIENT",
-  "companyId": {{companyId}}
+  "role": "CLIENT"
 }
 
 ### ADMIN - Get current user
