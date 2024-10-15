@@ -1,20 +1,27 @@
 package pl.edu.agh.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import pl.edu.agh.dao.ProductDAO
 import pl.edu.agh.model.serializers.BigDecimalSerializer
 import java.math.BigDecimal
 
 @Serializable
-data class Product(
+data class ProductDTO(
     val id: Int,
     val name: String,
     @Serializable(with = BigDecimalSerializer::class)
     val price: BigDecimal,
+    val description: String?
+) {
+    constructor(product: Product) : this(product.id, product.name, product.price, product.description)
+    constructor(product: ProductDAO) : this(product.id.value, product.name, product.price, product.description)
+}
+data class Product(
+    val id: Int,
+    val name: String,
+    val price: BigDecimal,
     val description: String?,
-    @Transient
-    val company: Company = Company(-1, "placeholder_value_for_serialization", "placeholder_value_for_serialization", null)
+    val company: Company
 )
 
 @Serializable

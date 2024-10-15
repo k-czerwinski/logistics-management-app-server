@@ -18,6 +18,6 @@ fun Application.configureDatabases() {
 
     transaction {
         addLogger(StdOutSqlLogger)
-        SchemaUtils.create(CompanyTable, ProductTable, CompanyLogoTable, OrderProductTable, OrderTable, UserTable, RefreshTokenTable)
+        SchemaUtils.create(CompanyTable, ProductTable, OrderProductTable, OrderTable, UserTable, RefreshTokenTable)
     }
 }

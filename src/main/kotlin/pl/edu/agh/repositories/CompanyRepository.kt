@@ -1,7 +1,6 @@
 package pl.edu.agh.repositories
 
 import pl.edu.agh.dao.CompanyDAO
-import pl.edu.agh.dao.CompanyLogoDAO
 import pl.edu.agh.dao.CompanyTable
 import pl.edu.agh.model.Company
 import pl.edu.agh.model.CompanyCreateDTO
@@ -21,7 +20,6 @@ class CompanyRepository {
     suspend fun add(item: CompanyCreateDTO) : Unit = suspendTransaction {
         CompanyDAO.new {
             name = item.name
-            logo = item.logo?.let { CompanyLogoDAO.new { image = item.logo.image } }
         }
     }
 }

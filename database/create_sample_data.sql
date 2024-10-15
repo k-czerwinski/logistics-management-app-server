@@ -1,9 +1,7 @@
--- Insert into company
 INSERT INTO "company" ("id", "name", "domain")
 VALUES (1, 'TechCorp', 'c1'),
        (2, 'RetailWorld', 'c2');
 
--- Insert into user
 INSERT INTO "user" ("id", "company", "username", "first_name","last_name", "password", "role", "temporary_password")
 VALUES (1, 1, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1, FALSE),
        (2, 1, 'b', 'John', 'Smith', crypt('p', gen_salt('bf')), 2, FALSE),
@@ -11,7 +9,6 @@ VALUES (1, 1, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1, FALSE),
        (4, 2, 'b', 'John', 'Smith', crypt('p', gen_salt('bf')), 2, FALSE),
        (5, 2, 'c', 'John', 'Smith', crypt('p', gen_salt('bf')), 3, FALSE);
 
--- Insert into product
 INSERT INTO "product" ("id", "company", "price", "name", "description")
 VALUES (1, 1, 19.99, 'Widget A', 'High-quality widget'),
        (2, 1, 29.99, 'Gadget B', 'Advanced gadget'),
@@ -37,7 +34,6 @@ VALUES
     (9, 1, 1, 'Order 9', NOW() - interval '3 day', NULL, NULL, NULL, 2, 123.45),
     (10, 1, 1, 'Order 10', NOW() - interval '2 day', NULL, NULL, NULL, 2, 440.00);
 
--- Users 2-5 each have 3 orders
 DO
 $$
 DECLARE
@@ -52,7 +48,6 @@ END LOOP;
 END LOOP;
 END $$;
 
--- Insert into order_product
 INSERT INTO "order_product" ("order", "product", "quantity")
 VALUES (1, 1, 2),
        (1, 2, 1),

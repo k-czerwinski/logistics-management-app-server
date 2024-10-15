@@ -3,6 +3,7 @@ package pl.edu.agh.routes
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import pl.edu.agh.model.ProductDTO
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.plugins.getClaimFromToken
 import pl.edu.agh.repositories.ProductRepository
@@ -16,7 +17,7 @@ fun Route.commonRoutes(
         install(UserRoleAuthorizationPlugin)
         get("/products") {
             val companyId: Int = getIntPathParam(call, "companyId")
-            val products = productRepository.getAll(companyId)
+            val products = productRepository.getAll(companyId).map{o -> ProductDTO(o)}
             call.respond(products)
         }
 
@@ -24,7 +25,7 @@ fun Route.commonRoutes(
             val productId: Int = getIntPathParam(call, "productId")
             val companyId: Int = getIntPathParam(call, "companyId")
             val product = getEntityById(productId, companyId, productRepository::getById)
-            call.respond(product)
+            call.respond(ProductDTO(product))
         }
 
         get {

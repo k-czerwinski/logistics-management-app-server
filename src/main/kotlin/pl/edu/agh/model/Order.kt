@@ -41,7 +41,7 @@ data class Order(
 
 @Serializable
 data class ProductEntry(
-    val product: Product,
+    val product: ProductDTO,
     val quantity: Int
 )
 
@@ -87,7 +87,7 @@ data class OrderExpectedDeliveryDTO(
 fun toOrder(dao: OrderDAO) = Order(
     id = dao.id.value,
     companyId = dao.companyDAO.id.value,
-    products = dao.products.map{ ProductEntry(toProduct(it.key), it.value) },
+    products = dao.products.map{ ProductEntry(ProductDTO(it.key), it.value) },
     client = toUser(dao.client),
     name = dao.name,
     placedOn = dao.placedOn,
