@@ -13,6 +13,7 @@ data class Company(
 @Serializable
 data class CompanyCreateDTO(
     val name: String,
+    val domain: String
 )
 
 fun toCompany(dao: CompanyDAO) = Company(

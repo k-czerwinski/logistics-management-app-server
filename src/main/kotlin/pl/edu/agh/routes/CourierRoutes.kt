@@ -6,7 +6,6 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.datetime.toJavaLocalDateTime
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderExpectedDeliveryDTO
 import pl.edu.agh.plugins.PathParamAuthorizationPlugin
@@ -61,7 +60,7 @@ fun Route.courierRoutes(orderRepository: OrderRepository) {
             val courierId: Int = getIntPathParam(call, "courierId")
             val expectedDelivery = call.receive<OrderExpectedDeliveryDTO>().expectedDelivery
             try {
-                orderRepository.setExpectedDelivery(companyId, orderId, courierId, expectedDelivery.toJavaLocalDateTime())
+                orderRepository.setExpectedDelivery(companyId, orderId, courierId, expectedDelivery)
                 call.respond(HttpStatusCode.NoContent)
             } catch (e: Exception) {
                 throw NotFoundException(

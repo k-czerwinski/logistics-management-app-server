@@ -29,7 +29,7 @@ fun Route.clientRoutes(orderRepository: OrderRepository) {
                 call.respond(HttpStatusCode.Created, OrderCreateResponseDTO(order.totalPrice))
                 return@post
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Company with id $companyId does not exist")
+                call.respond(HttpStatusCode.NotFound, "Company with id $companyId does not exist")
                 return@post
             }
         }

@@ -16,10 +16,10 @@ class CompanyRepository {
         CompanyDAO.find { CompanyTable.domain eq domain }.firstOrNull()?.let(::toCompany)
     }
 
-//    if logo is not null then it is added to the database automatically with company
     suspend fun add(item: CompanyCreateDTO) : Unit = suspendTransaction {
         CompanyDAO.new {
             name = item.name
+            domain = item.domain
         }
     }
 }

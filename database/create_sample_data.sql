@@ -2,12 +2,12 @@ INSERT INTO "company" ("id", "name", "domain")
 VALUES (1, 'TechCorp', 'c1'),
        (2, 'RetailWorld', 'c2');
 
-INSERT INTO "user" ("id", "company", "username", "first_name","last_name", "password", "role", "temporary_password")
-VALUES (1, 1, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1, FALSE),
-       (2, 1, 'b', 'John', 'Smith', crypt('p', gen_salt('bf')), 2, FALSE),
-       (3, 2, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1, FALSE),
-       (4, 2, 'b', 'John', 'Smith', crypt('p', gen_salt('bf')), 2, FALSE),
-       (5, 2, 'c', 'John', 'Smith', crypt('p', gen_salt('bf')), 3, FALSE);
+INSERT INTO "user" ("id", "company", "username", "first_name","last_name", "password", "role")
+VALUES (1, 1, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1),
+       (2, 1, 'b', 'Robert', 'William', crypt('p', gen_salt('bf')), 2),
+       (3, 2, 'a', 'Angelina', 'Garcia', crypt('p', gen_salt('bf')), 1),
+       (4, 2, 'b', 'Bob', 'Brown', crypt('p', gen_salt('bf')), 2),
+       (5, 2, 'c', 'Michael', 'Miller', crypt('p', gen_salt('bf')), 0);
 
 INSERT INTO "product" ("id", "company", "price", "name", "description")
 VALUES (1, 1, 19.99, 'Widget A', 'High-quality widget'),
