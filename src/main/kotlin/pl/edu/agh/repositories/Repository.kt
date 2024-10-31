@@ -1,5 +1,6 @@
 package pl.edu.agh.repositories
 
+import io.ktor.server.plugins.NotFoundException
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -19,3 +20,6 @@ interface Repository<T, U> {
 
 suspend fun <T> suspendTransaction(block: Transaction.() -> T): T =
     newSuspendedTransaction(Dispatchers.IO, statement = block)
+
+suspend fun <T> getEntityById(entityId: Int, companyId: Int, getEntityFunction: suspend (Int, Int) -> T?): T =
+    getEntityFunction(entityId, companyId) ?: throw NotFoundException("Entity with id $entityId not found")

@@ -59,7 +59,7 @@ class ClientRoutesTest : KtorTestBase() {
             totalPrice = BigDecimal(40)
         ),
         Order(
-            id = 1,
+            id = 2,
             companyId = companyId,
             products = products.shuffled().take(1).map { ProductEntry(it, 10) },
             client = user,
@@ -72,7 +72,7 @@ class ClientRoutesTest : KtorTestBase() {
             totalPrice = BigDecimal(40)
         ),
         Order(
-            id = 1,
+            id = 3,
             companyId = companyId,
             products = products.map { ProductEntry(it, 10) },
             client = user,

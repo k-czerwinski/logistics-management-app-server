@@ -19,6 +19,3 @@ fun validateWithPathParam(call: ApplicationCall, requiredValue: Int, pathParamNa
     }
 }
 
-suspend fun <T> getEntityById(entityId: Int, companyId: Int, getEntityFunction: suspend (Int, Int) -> T?): T =
-    getEntityFunction(entityId, companyId) ?: throw NotFoundException("Entity with id $entityId not found")
-

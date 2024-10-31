@@ -9,6 +9,7 @@ import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.plugins.getClaimFromToken
 import pl.edu.agh.repositories.ProductRepository
 import pl.edu.agh.repositories.UserRepository
+import pl.edu.agh.repositories.getEntityById
 
 fun Route.commonRoutes(
     productRepository: ProductRepository,

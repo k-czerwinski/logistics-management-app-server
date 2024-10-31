@@ -13,6 +13,7 @@ import pl.edu.agh.dto.OrderListViewDTO
 import pl.edu.agh.plugins.PathParamAuthorizationPlugin
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.repositories.OrderRepository
+import pl.edu.agh.repositories.getEntityById
 
 fun Route.clientRoutes(orderRepository: OrderRepository) {
     route(Regex("/(?<userRole>client)/(?<clientId>\\d+)")) {

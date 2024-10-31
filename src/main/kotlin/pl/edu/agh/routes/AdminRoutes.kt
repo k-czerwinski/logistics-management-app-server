@@ -16,6 +16,7 @@ import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.repositories.OrderRepository
 import pl.edu.agh.repositories.ProductRepository
 import pl.edu.agh.repositories.UserRepository
+import pl.edu.agh.repositories.getEntityById
 
 fun Route.adminRoutes(
     productRepository: ProductRepository,
