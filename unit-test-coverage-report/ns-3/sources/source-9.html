@@ -1,0 +1,243 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OrderListViewDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.edu.agh.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: OrderListViewDTO (pl.edu.agh.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrderListViewDTO</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OrderListViewDTO$Companion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (22/22)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.edu.agh.dto
+&nbsp;
+&nbsp;import kotlinx.datetime.LocalDateTime
+&nbsp;import kotlinx.serialization.Serializable
+&nbsp;import pl.edu.agh.model.Order
+&nbsp;import pl.edu.agh.dto.serializers.BigDecimalSerializer
+&nbsp;import java.math.BigDecimal
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class OrderDTO(
+&nbsp;    val id: Int,
+&nbsp;    val companyId: Int,
+&nbsp;    val products: List&lt;ProductEntryDTO&gt;,
+&nbsp;    val client: Int,
+&nbsp;    val name: String?,
+&nbsp;    val placedOn: LocalDateTime,
+&nbsp;    val sendOn: LocalDateTime?,
+&nbsp;    val deliveredOn: LocalDateTime?,
+&nbsp;    val expectedDeliveryOn: LocalDateTime?,
+&nbsp;    val courier: Int?,
+&nbsp;    @Serializable(with = BigDecimalSerializer::class)
+&nbsp;    val totalPrice: BigDecimal
+&nbsp;) {
+&nbsp;    constructor(order: Order) : this(
+&nbsp;        id = order.id,
+&nbsp;        companyId = order.companyId,
+&nbsp;        products = order.products.map { ProductEntryDTO(ProductDTO(it.product), it.quantity) },
+&nbsp;        client = order.client.id,
+&nbsp;        name = order.name,
+&nbsp;        placedOn = order.placedOn,
+&nbsp;        sendOn = order.sendOn,
+&nbsp;        deliveredOn = order.deliveredOn,
+&nbsp;        expectedDeliveryOn = order.expectedDeliveryOn,
+&nbsp;        courier = order.courier?.id,
+&nbsp;        totalPrice = order.totalPrice
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class ProductEntryDTO(
+&nbsp;    val product: ProductDTO,
+&nbsp;    val quantity: Int
+&nbsp;)
+&nbsp;
+<b class="pc">&nbsp;@Serializable</b>
+<b class="fc">&nbsp;data class OrderListViewDTO(</b>
+<b class="fc">&nbsp;    val id: Int,</b>
+<b class="fc">&nbsp;    val companyId: Int,</b>
+<b class="fc">&nbsp;    val clientId: Int,</b>
+<b class="fc">&nbsp;    val name: String?,</b>
+<b class="fc">&nbsp;    val placedOn: LocalDateTime,</b>
+<b class="fc">&nbsp;    val sendOn: LocalDateTime?,</b>
+<b class="fc">&nbsp;    val deliveredOn: LocalDateTime?,</b>
+<b class="fc">&nbsp;    val expectedDeliveryOn: LocalDateTime?,</b>
+<b class="fc">&nbsp;    @Serializable(with = BigDecimalSerializer::class)</b>
+&nbsp;    val totalPrice: BigDecimal
+&nbsp;) {
+<b class="fc">&nbsp;    constructor(order: Order) : this(</b>
+<b class="fc">&nbsp;        id = order.id,</b>
+<b class="fc">&nbsp;        companyId = order.companyId,</b>
+<b class="fc">&nbsp;        clientId = order.client.id,</b>
+<b class="fc">&nbsp;        name = order.name,</b>
+<b class="fc">&nbsp;        placedOn = order.placedOn,</b>
+<b class="fc">&nbsp;        sendOn = order.sendOn,</b>
+<b class="fc">&nbsp;        deliveredOn = order.deliveredOn,</b>
+<b class="fc">&nbsp;        expectedDeliveryOn = order.expectedDeliveryOn,</b>
+<b class="fc">&nbsp;        totalPrice = order.totalPrice</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class OrderCreateDTO(
+&nbsp;    val products: List&lt;OrderProductCreateDTO&gt;,
+&nbsp;    val clientId: Int,
+&nbsp;    val name: String?,
+&nbsp;)
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class OrderProductCreateDTO(
+&nbsp;    val productId: Int,
+&nbsp;    val quantity: Int
+&nbsp;)
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class OrderCreateResponseDTO(
+&nbsp;    @Serializable(with = BigDecimalSerializer::class)
+&nbsp;    val totalPrice: BigDecimal
+&nbsp;)
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class OrderExpectedDeliveryDTO(
+&nbsp;    val expectedDelivery: LocalDateTime
+&nbsp;)
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-31 13:28</div>
+</div>
+</body>
+</html>

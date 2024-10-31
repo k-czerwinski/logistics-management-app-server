@@ -1,0 +1,127 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProductTable</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.edu.agh.dao</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductTable (pl.edu.agh.dao)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductTable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.edu.agh.dao
+&nbsp;
+&nbsp;import org.jetbrains.exposed.dao.IntEntity
+&nbsp;import org.jetbrains.exposed.dao.IntEntityClass
+&nbsp;import org.jetbrains.exposed.dao.id.EntityID
+&nbsp;import org.jetbrains.exposed.dao.id.IntIdTable
+&nbsp;
+<b class="fc">&nbsp;object ProductTable: IntIdTable() {</b>
+<b class="fc">&nbsp;    val name = varchar(&quot;name&quot;, 20)</b>
+<b class="fc">&nbsp;    val price = decimal(&quot;price&quot;, 10, 2)</b>
+<b class="fc">&nbsp;    val description = varchar(&quot;description&quot;, 150).nullable()</b>
+<b class="fc">&nbsp;    val company = reference(&quot;company&quot;, CompanyTable, fkName = &quot;FK_Product_Company_Id&quot;)</b>
+&nbsp;}
+&nbsp;
+&nbsp;class ProductDAO(id: EntityID&lt;Int&gt;) : IntEntity(id) {
+&nbsp;    companion object : IntEntityClass&lt;ProductDAO&gt;(ProductTable)
+&nbsp;
+&nbsp;    var name by ProductTable.name
+&nbsp;    var price by ProductTable.price
+&nbsp;    var description by ProductTable.description
+&nbsp;    var companyDAO by CompanyDAO referencedOn ProductTable.company
+&nbsp;//    val orderProducts by OrderProduct referrersOn OrderProductTable.product
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-31 13:28</div>
+</div>
+</body>
+</html>

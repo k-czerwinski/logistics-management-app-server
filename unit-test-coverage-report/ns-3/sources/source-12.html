@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserListViewItemDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.edu.agh.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: UserListViewItemDTO (pl.edu.agh.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserListViewItemDTO</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserListViewItemDTO$Companion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.edu.agh.dto
+&nbsp;
+&nbsp;import kotlinx.serialization.Serializable
+&nbsp;import org.mindrot.jbcrypt.BCrypt
+&nbsp;import pl.edu.agh.model.User
+&nbsp;import pl.edu.agh.model.UserRole
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class UserCreateDTO(
+&nbsp;    val firstName: String,
+&nbsp;    val lastName: String,
+&nbsp;    val username: String,
+&nbsp;    val password: String,
+&nbsp;    val role: UserRole
+&nbsp;) {
+&nbsp;    fun hashedPassword() : String = BCrypt.hashpw(password, BCrypt.gensalt())
+&nbsp;}
+&nbsp;
+<b class="pc">&nbsp;@Serializable</b>
+<b class="fc">&nbsp;data class UserListViewItemDTO(</b>
+<b class="fc">&nbsp;    val id: Int,</b>
+<b class="fc">&nbsp;    val firstName: String,</b>
+<b class="fc">&nbsp;    val lastName: String,</b>
+<b class="fc">&nbsp;    val role: UserRole,</b>
+&nbsp;) {
+<b class="fc">&nbsp;    companion object {</b>
+&nbsp;        fun toDTO(user: User) : UserListViewItemDTO {
+<b class="fc">&nbsp;            return UserListViewItemDTO(</b>
+<b class="fc">&nbsp;                id = user.id,</b>
+<b class="fc">&nbsp;                firstName = user.firstName,</b>
+<b class="fc">&nbsp;                lastName = user.lastName,</b>
+<b class="fc">&nbsp;                role = user.role</b>
+&nbsp;            )
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;@Serializable
+&nbsp;data class UserDTO(
+&nbsp;    val id: Int,
+&nbsp;    val firstName: String,
+&nbsp;    val lastName: String,
+&nbsp;    val username: String,
+&nbsp;    val role: UserRole,
+&nbsp;    val companyId: Int
+&nbsp;) {
+&nbsp;    constructor(user: User) : this(
+&nbsp;        id = user.id,
+&nbsp;        firstName = user.firstName,
+&nbsp;        lastName = user.lastName,
+&nbsp;        username = user.username,
+&nbsp;        role = user.role,
+&nbsp;        companyId = user.company.id
+&nbsp;    )
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-31 13:28</div>
+</div>
+</body>
+</html>

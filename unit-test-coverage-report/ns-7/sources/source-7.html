@@ -1,0 +1,93 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Repository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.edu.agh.repositories</a>
+</div>
+
+<h1>Coverage Summary for Class: Repository (pl.edu.agh.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Repository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.edu.agh.repositories
+&nbsp;
+&nbsp;import io.ktor.server.plugins.NotFoundException
+&nbsp;import kotlinx.coroutines.Dispatchers
+&nbsp;import org.jetbrains.exposed.sql.Transaction
+&nbsp;import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for repositories.
+&nbsp; * T - type of the entity
+&nbsp; * U - type of the entity&#39;s DAO used for adding new entities
+&nbsp; */
+&nbsp;interface Repository&lt;T, U&gt; {
+&nbsp;    suspend fun getAll(companyId: Int): List&lt;T&gt;
+&nbsp;    suspend fun getById(entityId: Int, companyId: Int): T?
+&nbsp;    suspend fun add(item: U, companyId: Int) : T
+&nbsp;    suspend fun update(item: T): T
+&nbsp;    suspend fun delete(id: Int): Boolean
+&nbsp;}
+&nbsp;
+&nbsp;suspend fun &lt;T&gt; suspendTransaction(block: Transaction.() -&gt; T): T =
+&nbsp;    newSuspendedTransaction(Dispatchers.IO, statement = block)
+&nbsp;
+&nbsp;suspend fun &lt;T&gt; getEntityById(entityId: Int, companyId: Int, getEntityFunction: suspend (Int, Int) -&gt; T?): T =
+&nbsp;    getEntityFunction(entityId, companyId) ?: throw NotFoundException(&quot;Entity with id $entityId not found&quot;)
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-31 13:28</div>
+</div>
+</body>
+</html>
