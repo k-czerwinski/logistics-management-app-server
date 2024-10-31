@@ -17,6 +17,9 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import pl.edu.agh.KtorTestBase
+import pl.edu.agh.dto.OrderDTO
+import pl.edu.agh.dto.OrderExpectedDeliveryDTO
+import pl.edu.agh.dto.OrderListViewDTO
 import pl.edu.agh.model.*
 import pl.edu.agh.plugins.configureSecurity
 import pl.edu.agh.repositories.OrderRepository
@@ -32,8 +35,8 @@ class CourierRoutesTest : KtorTestBase() {
     private val courierId = 2
 
     val company = Company(companyId, "Company 1", "sample-company.com")
-    val user = User(1, "FirstName", "LastName", "username", "password", UserRole.CLIENT, 1)
-    val courier = User(courierId, "FirstName", "LastName", "username", "password", UserRole.COURIER, 1)
+    val user = User(1, "FirstName", "LastName", "username", "password", UserRole.CLIENT, company)
+    val courier = User(courierId, "FirstName", "LastName", "username", "password", UserRole.COURIER, company)
     val products = listOf(
         Product(1, "Product 1", BigDecimal(12), "Description 1", company),
         Product(2, "Product 2", BigDecimal(13), "Description 2", company),
@@ -44,7 +47,7 @@ class CourierRoutesTest : KtorTestBase() {
         Order(
             id = 1,
             companyId = companyId,
-            products = products.shuffled().take(2).map { ProductEntry(ProductDTO(it), 10) },
+            products = products.shuffled().take(2).map { ProductEntry(it, 10) },
             client = user,
             name = "Order 1",
             placedOn = LocalDateTime(2024, 10, 1, 10, 0),
@@ -57,7 +60,7 @@ class CourierRoutesTest : KtorTestBase() {
         Order(
             id = 2,
             companyId = companyId,
-            products = products.shuffled().take(1).map { ProductEntry(ProductDTO(it), 10) },
+            products = products.shuffled().take(1).map { ProductEntry(it, 10) },
             client = user,
             name = "Order 2",
             placedOn = LocalDateTime(2024, 10, 4, 10, 0),
@@ -70,7 +73,7 @@ class CourierRoutesTest : KtorTestBase() {
         Order(
             id = 3,
             companyId = companyId,
-            products = products.map { ProductEntry(ProductDTO(it), 10) },
+            products = products.map { ProductEntry(it, 10) },
             client = user,
             name = "Order 3",
             placedOn = LocalDateTime(2024, 10, 7, 10, 0),
@@ -81,7 +84,7 @@ class CourierRoutesTest : KtorTestBase() {
             totalPrice = BigDecimal(170)
         ),
     )
-    val ordersJson = Json.encodeToString(orders.map { it.toOrderListView() })
+    val ordersJson = Json.encodeToString(orders.map(::OrderListViewDTO))
 
     private fun courierRoutesTestApplication(test: suspend ApplicationTestBuilder.(client: HttpClient) -> Unit) =
         customTestApplication {
@@ -141,7 +144,7 @@ class CourierRoutesTest : KtorTestBase() {
         }
         // then
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(Json.encodeToString(order), response.bodyAsText())
+        assertEquals(Json.encodeToString(OrderDTO(order)), response.bodyAsText())
     }
 
     @Test

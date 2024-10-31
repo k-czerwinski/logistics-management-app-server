@@ -14,9 +14,10 @@ import io.mockk.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import pl.edu.agh.KtorTestBase
+import pl.edu.agh.dto.UserDTO
 import pl.edu.agh.model.Company
 import pl.edu.agh.model.Product
-import pl.edu.agh.model.ProductDTO
+import pl.edu.agh.dto.ProductDTO
 import pl.edu.agh.model.User
 import pl.edu.agh.model.UserRole
 import pl.edu.agh.plugins.configureSecurity
@@ -105,7 +106,7 @@ class CommonRoutesTest : KtorTestBase() {
     @Test
     fun `test get user`() = commonRoutesTestApplication {
         // given
-        val user = User(userId, "FirstName", "LastName", "username", "password", UserRole.CLIENT, companyId)
+        val user = User(userId, "FirstName", "LastName", "username", "password", UserRole.CLIENT, company)
         val accessToken = jwtTokenBuilder.accessToken(1, UserRole.CLIENT, 1)
         coEvery { userRepository.getById(userId, companyId) } returns user
         // when
@@ -114,7 +115,7 @@ class CommonRoutesTest : KtorTestBase() {
         }
         // then
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(Json.encodeToString(user), response.bodyAsText())
+        assertEquals(Json.encodeToString(UserDTO(user)), response.bodyAsText())
     }
 
     @Test
@@ -126,7 +127,7 @@ class CommonRoutesTest : KtorTestBase() {
 
     private fun performTest(userRole: UserRole) = commonRoutesTestApplication {
         // given
-        val user = User(userId, "FirstName", "LastName", "username", "password", userRole, companyId)
+        val user = User(userId, "FirstName", "LastName", "username", "password", userRole, company)
         val accessToken = jwtTokenBuilder.accessToken(1, userRole, 1)
         coEvery { userRepository.getById(userId, companyId) } returns user
         // when
@@ -135,6 +136,6 @@ class CommonRoutesTest : KtorTestBase() {
         }
         // then
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(Json.encodeToString(user), response.bodyAsText())
+        assertEquals(Json.encodeToString(UserDTO(user)), response.bodyAsText())
     }
 }

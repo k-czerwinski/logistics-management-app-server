@@ -4,27 +4,28 @@ import io.ktor.server.plugins.*
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.and
 import pl.edu.agh.dao.*
+import pl.edu.agh.dto.OrderCreateDTO
 import pl.edu.agh.model.*
 import java.time.LocalDateTime
 
 class OrderRepository : Repository<Order, OrderCreateDTO> {
     override suspend fun getAll(companyId: Int): List<Order> = suspendTransaction {
-        OrderDAO.find { OrderTable.company eq companyId }.map(::toOrder)
+        OrderDAO.find { OrderTable.company eq companyId }.map(::Order)
     }
 
     suspend fun getAllByClientId(clientId: Int, companyId: Int): List<Order> = suspendTransaction {
         OrderDAO.find { (OrderTable.client eq clientId) and (OrderTable.company eq companyId) }
-            .map(::toOrder)
+            .map(::Order)
     }
 
     suspend fun getAllByCourierId(courierId: Int, companyId: Int): List<Order> = suspendTransaction {
         OrderDAO.find { (OrderTable.courier eq courierId) and (OrderTable.company eq companyId) }
-            .map(::toOrder)
+            .map(::Order)
     }
 
     override suspend fun getById(entityId: Int, companyId: Int): Order? = suspendTransaction {
         OrderDAO.find { (OrderTable.id eq entityId) and (OrderTable.company eq companyId) }.firstOrNull()
-            ?.let(::toOrder)
+            ?.let(::Order)
     }
 
     //    it also adds all the products to the order_products table
@@ -54,7 +55,7 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
                 this.orderDAO = orderDAO
             }
         }
-        toOrder(orderDAO)
+        Order(orderDAO)
     }
 
     suspend fun deliverOrder(companyId: Int, orderId: Int, courierId: Int) = suspendTransaction {

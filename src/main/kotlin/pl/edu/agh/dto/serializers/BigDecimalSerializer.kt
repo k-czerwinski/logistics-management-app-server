@@ -1,4 +1,4 @@
-package pl.edu.agh.model.serializers
+package pl.edu.agh.dto.serializers
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializer

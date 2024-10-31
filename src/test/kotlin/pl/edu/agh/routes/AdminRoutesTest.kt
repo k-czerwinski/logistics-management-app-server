@@ -17,7 +17,11 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import pl.edu.agh.KtorTestBase
+import pl.edu.agh.dto.OrderDTO
+import pl.edu.agh.dto.OrderListViewDTO
+import pl.edu.agh.dto.ProductCreateDTO
 import pl.edu.agh.model.*
+import pl.edu.agh.dto.UserListViewItemDTO
 import pl.edu.agh.plugins.configureSecurity
 import pl.edu.agh.repositories.OrderRepository
 import pl.edu.agh.repositories.ProductRepository
@@ -36,7 +40,7 @@ class AdminRoutesTest : KtorTestBase() {
     private val adminId = 1
 
     val company = Company(companyId, "Company 1", "sample-company.com")
-    val user = User(adminId, "Admin", "User", "admin.user", "password", UserRole.ADMIN, companyId)
+    val user = User(adminId, "Admin", "User", "admin.user", "password", UserRole.ADMIN, company)
     val products = listOf(
         Product(1, "Product 1", BigDecimal(12), "Description 1", company),
         Product(2, "Product 2", BigDecimal(13), "Description 2", company)
@@ -45,7 +49,7 @@ class AdminRoutesTest : KtorTestBase() {
         Order(
             id = 1,
             companyId = companyId,
-            products = products.map { ProductEntry(ProductDTO(it), 10) },
+            products = products.map { ProductEntry(it, 10) },
             client = user,
             name = "Order 1",
             placedOn = LocalDateTime(2024, 10, 1, 10, 0),
@@ -56,7 +60,7 @@ class AdminRoutesTest : KtorTestBase() {
             totalPrice = BigDecimal(40)
         )
     )
-    val ordersJson = Json.encodeToString(orders.map { it.toOrderListView() })
+    val ordersJson = Json.encodeToString(orders.map(::OrderListViewDTO))
 
     private fun adminRoutesTestApplication(test: suspend ApplicationTestBuilder.(client: HttpClient) -> Unit) =
         customTestApplication {
@@ -116,7 +120,7 @@ class AdminRoutesTest : KtorTestBase() {
         }
         // then
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(Json.encodeToString(order), response.bodyAsText())
+        assertEquals(Json.encodeToString(OrderDTO(order)), response.bodyAsText())
     }
 
     @Test

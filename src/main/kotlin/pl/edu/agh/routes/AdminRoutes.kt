@@ -5,7 +5,13 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import pl.edu.agh.dto.OrderDTO
+import pl.edu.agh.dto.OrderListViewDTO
+import pl.edu.agh.dto.ProductCreateDTO
 import pl.edu.agh.model.*
+import pl.edu.agh.dto.UserListViewItemDTO
+import pl.edu.agh.dto.UserCreateDTO
+import pl.edu.agh.dto.UserDTO
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.repositories.OrderRepository
 import pl.edu.agh.repositories.ProductRepository
@@ -44,7 +50,7 @@ fun Route.adminRoutes(
         get("/user/{userId}") {
             val companyId: Int = getIntPathParam(call, "companyId")
             val userId: Int = getIntPathParam(call, "userId")
-            val user = getEntityById(userId, companyId, userRepository::getById)
+            val user = getEntityById(userId, companyId, userRepository::getById).let(::UserDTO)
             call.respond(user)
         }
 
@@ -70,14 +76,14 @@ fun Route.adminRoutes(
 
         get("/orders") {
             val companyId: Int = getIntPathParam(call, "companyId")
-            val orders = orderRepository.getAll(companyId).map(Order::toOrderListView).toList()
+            val orders = orderRepository.getAll(companyId).map(::OrderListViewDTO).toList()
             call.respond(HttpStatusCode.OK, orders)
         }
 
         get("/order/{orderId}") {
             val orderId: Int = getIntPathParam(call, "orderId")
             val companyId: Int = getIntPathParam(call, "companyId")
-            val order = getEntityById(orderId, companyId, orderRepository::getById)
+            val order = getEntityById(orderId, companyId, orderRepository::getById).let(::OrderDTO)
             call.respond(order)
         }
 

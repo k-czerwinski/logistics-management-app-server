@@ -5,7 +5,7 @@ import pl.edu.agh.dao.RefreshTokenDAO
 import pl.edu.agh.dao.RefreshTokenTable
 import pl.edu.agh.dao.UserDAO
 import pl.edu.agh.model.RefreshToken
-import pl.edu.agh.model.toUser
+import pl.edu.agh.model.User
 
 class RefreshTokenRepository {
     suspend fun addOrReplace(refreshToken: String, userId: Int, expiryDate: LocalDateTime) : RefreshTokenDAO = suspendTransaction {
@@ -19,7 +19,7 @@ class RefreshTokenRepository {
 
     suspend fun getByToken(token: String): RefreshToken? = suspendTransaction {
         RefreshTokenDAO.find { RefreshTokenTable.token eq token }.firstOrNull()?.let {
-            RefreshToken(toUser(it.user), it.token, it.expiryDate)
+            RefreshToken(User(it.user), it.token, it.expiryDate)
         }
     }
 

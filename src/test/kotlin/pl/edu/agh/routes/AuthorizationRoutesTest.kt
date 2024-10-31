@@ -15,6 +15,11 @@ import kotlinx.serialization.json.Json
 import org.mindrot.jbcrypt.BCrypt
 import pl.edu.agh.KtorTestBase
 import pl.edu.agh.dao.RefreshTokenDAO
+import pl.edu.agh.dto.LoginRequest
+import pl.edu.agh.dto.LoginResponse
+import pl.edu.agh.dto.LogoutRequest
+import pl.edu.agh.dto.RefreshTokenRequest
+import pl.edu.agh.dto.RefreshTokenResponse
 import pl.edu.agh.model.*
 import pl.edu.agh.plugins.JwtTokenBuilder
 import pl.edu.agh.plugins.configureSecurity
@@ -39,7 +44,7 @@ class AuthorizationRoutesTest : KtorTestBase() {
     private val userRole = UserRole.CLIENT
 
     val company = Company(companyId, "Company 1", companyDomain)
-    val user = User(userId, "FirstName", "LastName", username, BCrypt.hashpw(password, BCrypt.gensalt()), userRole, companyId)
+    val user = User(userId, "FirstName", "LastName", username, BCrypt.hashpw(password, BCrypt.gensalt()), userRole, company)
 
     private fun authorizationRoutesTestApplication(test: suspend ApplicationTestBuilder.(client: HttpClient) -> Unit) =
         customTestApplication {

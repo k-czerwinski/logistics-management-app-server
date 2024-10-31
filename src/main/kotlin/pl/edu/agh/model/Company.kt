@@ -8,16 +8,6 @@ data class Company(
     val id: Int,
     val name: String,
     val domain: String,
-)
-
-@Serializable
-data class CompanyCreateDTO(
-    val name: String,
-    val domain: String
-)
-
-fun toCompany(dao: CompanyDAO) = Company(
-    id = dao.id.value,
-    name = dao.name,
-    domain = dao.domain,
-)
+) {
+    constructor(dao: CompanyDAO) : this(dao.id.value, dao.name, dao.domain)
+}

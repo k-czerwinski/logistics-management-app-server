@@ -6,37 +6,19 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.serialization.Serializable
 import org.mindrot.jbcrypt.BCrypt
+import pl.edu.agh.dto.LoginRequest
+import pl.edu.agh.dto.LoginResponse
+import pl.edu.agh.dto.LogoutRequest
+import pl.edu.agh.dto.RefreshTokenRequest
+import pl.edu.agh.dto.RefreshTokenResponse
 import pl.edu.agh.model.Company
 import pl.edu.agh.model.RefreshToken
-import pl.edu.agh.model.UserRole
 import pl.edu.agh.plugins.JwtTokenBuilder
 import pl.edu.agh.repositories.CompanyRepository
 import pl.edu.agh.repositories.RefreshTokenRepository
 import pl.edu.agh.repositories.UserRepository
 import java.time.ZoneOffset
-
-@Serializable
-data class LoginRequest(val username: String, val password: String, val companyDomain: String)
-
-@Serializable
-data class LoginResponse(
-    val accessToken: String,
-    val refreshToken: String,
-    val companyId: Int,
-    val userId: Int,
-    val userRole: UserRole
-)
-
-@Serializable
-data class RefreshTokenRequest(val refreshToken: String)
-
-@Serializable
-data class LogoutRequest(val refreshToken: String)
-
-@Serializable
-data class RefreshTokenResponse(val accessToken: String, val refreshToken: String)
 
 fun Route.authorizationRoutes(
     userRepository: UserRepository,
@@ -51,13 +33,13 @@ fun Route.authorizationRoutes(
         val user = userRepository.getByUsername(loginRequest.username, company.id)
 
         if (user != null && BCrypt.checkpw(loginRequest.password, user.password)) {
-            val accessToken = jwtTokenBuilder.accessToken(user.id, user.role, user.companyId)
-            val refreshToken = jwtTokenBuilder.refreshToken(user.id, user.role, user.companyId)
+            val accessToken = jwtTokenBuilder.accessToken(user.id, user.role, user.company.id)
+            val refreshToken = jwtTokenBuilder.refreshToken(user.id, user.role, user.company.id)
             refreshTokenRepository.addOrReplace(refreshToken.first, user.id, refreshToken.second)
 
             call.respond(
                 HttpStatusCode.OK,
-                LoginResponse(accessToken, refreshToken.first, user.companyId, user.id, user.role)
+                LoginResponse(accessToken, refreshToken.first, user.company.id, user.id, user.role)
             )
         } else {
             call.respond(HttpStatusCode.Unauthorized)
@@ -82,12 +64,12 @@ fun Route.authorizationRoutes(
         val accessToken = jwtTokenBuilder.accessToken(
             refreshTokenEntry.user.id,
             refreshTokenEntry.user.role,
-            refreshTokenEntry.user.companyId
+            refreshTokenEntry.user.company.id
         )
         val newRefreshToken = jwtTokenBuilder.refreshToken(
             refreshTokenEntry.user.id,
             refreshTokenEntry.user.role,
-            refreshTokenEntry.user.companyId
+            refreshTokenEntry.user.company.id
         )
         refreshTokenRepository.addOrReplace(
             newRefreshToken.first,

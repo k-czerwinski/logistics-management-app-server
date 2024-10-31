@@ -3,7 +3,8 @@ package pl.edu.agh.routes
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import pl.edu.agh.model.ProductDTO
+import pl.edu.agh.dto.ProductDTO
+import pl.edu.agh.dto.UserDTO
 import pl.edu.agh.plugins.UserRoleAuthorizationPlugin
 import pl.edu.agh.plugins.getClaimFromToken
 import pl.edu.agh.repositories.ProductRepository
@@ -31,7 +32,7 @@ fun Route.commonRoutes(
         get {
             val userId = getClaimFromToken(call, "user").asInt()
             val companyId: Int = getIntPathParam(call, "companyId")
-            val user = getEntityById(userId, companyId, userRepository::getById)
+            val user = getEntityById(userId, companyId, userRepository::getById).let(::UserDTO)
             call.respond(user)
         }
     }
