@@ -26,12 +26,4 @@ class ProductRepository : Repository<Product, ProductCreateDTO> {
         }
         Product(productDAO)
     }
-
-    override suspend fun update(item: Product): Product {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun delete(id: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 }

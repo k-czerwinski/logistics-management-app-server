@@ -83,12 +83,4 @@ class OrderRepository : Repository<Order, OrderCreateDTO> {
                 it.sendOn = LocalDateTime.now().toKotlinLocalDateTime()
             } ?: throw NotFoundException("Order with id $orderId cannot be send because it does not exist or has illegal state")
     }
-
-    override suspend fun delete(id: Int): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun update(item: Order): Order {
-        TODO("Not yet implemented")
-    }
 }

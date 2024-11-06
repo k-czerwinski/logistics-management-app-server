@@ -9,7 +9,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import pl.edu.agh.dao.CompanyDAO
 import pl.edu.agh.dao.CompanyTable
-import pl.edu.agh.dto.CompanyDTO
+import pl.edu.agh.dto.CompanyCreateDTO
 import pl.edu.agh.model.Company
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -123,15 +123,15 @@ class CompanyRepositoryTest {
     @Test
     fun `test add creates new company`() = runTest {
         // given
-        val companyDTO = CompanyDTO("Company Name", "sample-company-domain.com")
+        val companyCreateDTO = CompanyCreateDTO("Company Name", "sample-company-domain.com")
         // when
-        companyRepository.add(companyDTO)
+        companyRepository.add(companyCreateDTO)
         // then
         val company = transaction {
-            CompanyDAO.find { CompanyTable.domain eq companyDTO.domain }.firstOrNull()
+            CompanyDAO.find { CompanyTable.domain eq companyCreateDTO.domain }.firstOrNull()
         }
         assertNotNull(company)
-        assertEquals(companyDTO.name, company.name)
-        assertEquals(companyDTO.domain, company.domain)
+        assertEquals(companyCreateDTO.name, company.name)
+        assertEquals(companyCreateDTO.domain, company.domain)
     }
 }

@@ -26,7 +26,7 @@ application {
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17)) // Change 17 to the desired Java version
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -58,7 +58,3 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("com.h2database:h2:$h2_version")
 }
-
-//tasks.withType<Test> {
-//    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED", "-Dnet.bytebuddy.experimental=true")
-//}

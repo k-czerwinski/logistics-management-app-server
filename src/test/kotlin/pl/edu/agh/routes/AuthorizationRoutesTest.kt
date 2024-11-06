@@ -55,7 +55,7 @@ class AuthorizationRoutesTest : KtorTestBase() {
                 }
             }
             routing {
-                authorizationRoutes(userRepository, companyRepository, refreshTokenRepository, jwtTokenBuilderMock)
+                authRoutes(userRepository, companyRepository, refreshTokenRepository, jwtTokenBuilderMock)
             }
             test(client)
         }

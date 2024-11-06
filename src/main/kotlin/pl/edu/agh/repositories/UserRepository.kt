@@ -37,12 +37,4 @@ class UserRepository : Repository<User, UserCreateDTO> {
         }
         User(userDAO)
     }
-
-    override suspend fun update(item: User): User {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun delete(id: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 }

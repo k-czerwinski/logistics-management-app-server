@@ -20,7 +20,7 @@ import pl.edu.agh.repositories.RefreshTokenRepository
 import pl.edu.agh.repositories.UserRepository
 import java.time.ZoneOffset
 
-fun Route.authorizationRoutes(
+fun Route.authRoutes(
     userRepository: UserRepository,
     companyRepository: CompanyRepository,
     refreshTokenRepository: RefreshTokenRepository,

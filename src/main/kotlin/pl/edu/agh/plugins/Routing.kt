@@ -32,7 +32,7 @@ fun Application.configureRouting(
         }
     }
     routing {
-        authorizationRoutes(userRepository, companyRepository, refreshTokenRepository, jwtTokenBuilder)
+        authRoutes(userRepository, companyRepository, refreshTokenRepository, jwtTokenBuilder)
         authenticate {
             route("/company/{companyId}") {
                 install(PathParamAuthorizationPlugin("companyIdPathValidationPlugin")) {

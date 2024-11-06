@@ -21,7 +21,7 @@ import pl.edu.agh.repositories.RefreshTokenRepository
 import pl.edu.agh.repositories.UserRepository
 import pl.edu.agh.routes.PermissionDeniedException
 import pl.edu.agh.routes.adminRoutes
-import pl.edu.agh.routes.authorizationRoutes
+import pl.edu.agh.routes.authRoutes
 import pl.edu.agh.routes.clientRoutes
 import pl.edu.agh.routes.commonRoutes
 import pl.edu.agh.routes.courierRoutes
@@ -59,7 +59,7 @@ class ConfigureRoutingTest : KtorTestBase() {
 
             // then
             verify {
-                any<Route>().authorizationRoutes(
+                any<Route>().authRoutes(
                     userRepository,
                     companyRepository,
                     refreshTokenRepository,

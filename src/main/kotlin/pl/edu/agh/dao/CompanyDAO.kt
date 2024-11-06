@@ -12,7 +12,6 @@ object CompanyTable: IntIdTable() {
 
 class CompanyDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<CompanyDAO>(CompanyTable)
-
     var name by CompanyTable.name
     var domain by CompanyTable.domain
 }

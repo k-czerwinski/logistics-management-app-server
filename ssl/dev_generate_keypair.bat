@@ -1,15 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion
 
-@REM  ensure that certificate is saved in safe directory
-set "KEYSTORE=./keystore/keystore.jks"
+@REM
+set "KEYSTORE=./generated/keystore.jks"
 set "ALIAS=localhostKey"
 set "KEYALG=EC"
 set "KEYSIZE=256"
 set "SIGALG=SHA256withECDSA"
 set "VALIDITY=365"
 set "CN=10.0.2.2"
-@REM SAN - Subject Alternative Name - used for hostname verification to avoid man in the middle attack
+@REM
 set "SAN=DNS:localhost,IP:10.0.2.2"
 set "OU=Development Team"
 set "O=Company Name"

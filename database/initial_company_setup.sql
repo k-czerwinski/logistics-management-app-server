@@ -1,4 +1,4 @@
--- inserting company with (optional) logo and inserting initial admin user for company
+-- inserting company and inserting initial admin user for company
 DO $$
     DECLARE
         company_name TEXT := 'Company Name';

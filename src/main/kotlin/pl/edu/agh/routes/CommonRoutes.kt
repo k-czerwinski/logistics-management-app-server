@@ -19,7 +19,7 @@ fun Route.commonRoutes(
         install(UserRoleAuthorizationPlugin)
         get("/products") {
             val companyId: Int = getIntPathParam(call, "companyId")
-            val products = productRepository.getAll(companyId).map{o -> ProductDTO(o)}
+            val products = productRepository.getAll(companyId).map(::ProductDTO)
             call.respond(products)
         }
 
@@ -37,5 +37,4 @@ fun Route.commonRoutes(
             call.respond(user)
         }
     }
-
 }
