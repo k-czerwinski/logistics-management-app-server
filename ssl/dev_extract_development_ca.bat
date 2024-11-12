@@ -2,8 +2,8 @@
 setlocal enabledelayedexpansion
 
 set "ALIAS=localhostKey"
-set "KEYSTORE_PATH=.\keystore\keystore.jks"
-set "CA_FILENAME=.\keystore\ca.pem"
+set "KEYSTORE_PATH=.\generated\keystore.jks"
+set "CA_FILENAME=.\generated\ca.pem"
 
 keytool -exportcert ^
         -alias "!ALIAS!" ^
