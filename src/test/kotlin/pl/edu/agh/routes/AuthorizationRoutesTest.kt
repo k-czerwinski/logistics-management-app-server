@@ -80,7 +80,6 @@ class AuthorizationRoutesTest : KtorTestBase() {
         // then
         assertEquals(HttpStatusCode.OK, response.status)
         val loginResponse = Json.decodeFromString<LoginResponse>(response.bodyAsText())
-//        assertEquals(accessToken, loginResponse.accessToken)
         assertEquals(refreshToken.first, loginResponse.refreshToken)
         assertEquals(companyId, loginResponse.companyId)
         assertEquals(userId, loginResponse.userId)

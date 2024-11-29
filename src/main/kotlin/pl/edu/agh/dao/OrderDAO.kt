@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import pl.edu.agh.model.Order
 
 object OrderTable: IntIdTable() {
     val company = reference("company", CompanyTable, fkName = "FK_Order_Company_Id")
@@ -54,17 +53,4 @@ class OrderProductDAO(id: EntityID<Int>) : IntEntity(id) {
     var orderDAO by OrderDAO referencedOn OrderProductTable.order
     var productDAO by ProductDAO referencedOn OrderProductTable.product
     var quantity by OrderProductTable.quantity
-}
-
-// TODO: remove this function?
-fun toOrderDAO(model: Order) = OrderDAO.new {
-    companyDAO = CompanyDAO[model.companyId]
-    client = UserDAO[model.client.id]
-    name = model.name
-    sendOn = model.sendOn
-    placedOn = model.placedOn
-    deliveredOn = model.deliveredOn
-    expectedDeliveryOn = model.expectedDeliveryOn
-    courier = model.courier?.let { UserDAO[it.id] }
-    totalPrice = model.totalPrice
 }

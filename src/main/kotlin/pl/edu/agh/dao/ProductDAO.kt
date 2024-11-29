@@ -19,5 +19,4 @@ class ProductDAO(id: EntityID<Int>) : IntEntity(id) {
     var price by ProductTable.price
     var description by ProductTable.description
     var companyDAO by CompanyDAO referencedOn ProductTable.company
-//    val orderProducts by OrderProduct referrersOn OrderProductTable.product
 }

@@ -1,4 +1,5 @@
 -- inserting company and inserting initial admin user for company
+-- create extension pgcrypto;
 DO $$
     DECLARE
         company_name TEXT := 'Company Name';

@@ -3,8 +3,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "companyDomain": "c2",
-  "username": "c",
+  "companyDomain": "c1",
+  "username": "admin",
   "password": "p"
 }
 
@@ -12,12 +12,16 @@ Content-Type: application/json
     client.global.set("refreshToken", response.body.refreshToken);%}
 
 ### Logout endpoint
-POST {{host}}/company/{{companyId}}/client/{{clientId}}/logout
+POST {{host}}/logout
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
+{
+  "refreshToken": {{refreshToken}}
+}
+
 ### Refresh token endpoint
-POST {{host}}/company/{{companyId}}/client/{{clientId}}/refresh-token
+POST {{host}}/refresh-token
 Content-Type: application/json
 
 {
@@ -90,7 +94,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### ADMIN - Get product by id
-GET {{host}}/company/{{companyId}}/admin/{{adminId}}/product/{{productId}}
+GET {{host}}/company/{{companyId}}/admin/product/{{productId}}
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -108,7 +112,7 @@ Authorization: Bearer {{accessToken}}
 ### ADMIN - Get users
 GET {{host}}/company/{{companyId}}/admin/{{adminId}}/users?role=courier
 Authorization: Bearer {{accessToken}}
-\
+
 ### ADMIN - Add a new user
 POST {{host}}/company/{{companyId}}/admin/{{adminId}}/user
 Content-Type: application/json
@@ -117,7 +121,7 @@ Authorization: Bearer {{accessToken}}
 {
   "firstName": "John",
   "lastName": "Doe",
-  "username": "abcdfghi",
+  "username": "abcdfghijk",
   "password": "password123",
   "role": "CLIENT"
 }

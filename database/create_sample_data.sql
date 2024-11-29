@@ -1,13 +1,17 @@
+
 INSERT INTO "company" ("id", "name", "domain")
 VALUES (1, 'TechCorp', 'c1'),
        (2, 'RetailWorld', 'c2');
+ALTER SEQUENCE company_id_seq RESTART WITH 3;
 
 INSERT INTO "user" ("id", "company", "username", "first_name","last_name", "password", "role")
-VALUES (1, 1, 'a', 'John', 'Smith', crypt('p', gen_salt('bf')), 1),
-       (2, 1, 'b', 'Robert', 'William', crypt('p', gen_salt('bf')), 2),
-       (3, 2, 'a', 'Angelina', 'Garcia', crypt('p', gen_salt('bf')), 1),
-       (4, 2, 'b', 'Bob', 'Brown', crypt('p', gen_salt('bf')), 2),
-       (5, 2, 'c', 'Michael', 'Miller', crypt('p', gen_salt('bf')), 0);
+VALUES (1, 1, 'client', 'John', 'Smith', crypt('p', gen_salt('bf')), 1),
+       (2, 1, 'courier', 'Robert', 'William', crypt('p', gen_salt('bf')), 2),
+       (3, 2, 'client', 'Angelina', 'Garcia', crypt('p', gen_salt('bf')), 1),
+       (4, 2, 'courier', 'Bob', 'Brown', crypt('p', gen_salt('bf')), 2),
+       (5, 2, 'admin', 'Michael', 'Miller', crypt('p', gen_salt('bf')), 0),
+       (6, 1, 'admin', 'Francisco', 'Sanchez', crypt('p', gen_salt('bf')), 0);
+ALTER SEQUENCE product_id_seq RESTART WITH 7;
 
 INSERT INTO "product" ("id", "company", "price", "name", "description")
 VALUES (1, 1, 19.99, 'Widget A', 'High-quality widget'),
@@ -20,6 +24,7 @@ VALUES (1, 1, 19.99, 'Widget A', 'High-quality widget'),
        (8, 2, 34.99, 'Footwear H', 'Durable footwear'),
        (9, 2, 44.99, 'Bag I', 'Spacious bag'),
        (10, 2, 54.99, 'Watch J', 'Elegant watch');
+ALTER SEQUENCE product_id_seq RESTART WITH 11;
 
 INSERT INTO "order" ("id", "company", "client", "name", "placed_on", "send_on", "expected_delivery", "delivered_on", "courier", "total_price")
 VALUES
@@ -47,6 +52,7 @@ FOR i IN 2..5 LOOP
 END LOOP;
 END LOOP;
 END $$;
+ALTER SEQUENCE order_id_seq RESTART WITH 23;
 
 INSERT INTO "order_product" ("order", "product", "quantity")
 VALUES (1, 1, 2),
